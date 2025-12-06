@@ -92,7 +92,7 @@ const Index = () => {
             <h1 className="apple-headline fade-in opacity-0">Your Global​ <br />Work Passport​  
             </h1>
             <p className="apple-subheadline mt-6 max-w-2xl mx-auto fade-in opacity-0 stagger-1">
-              A verified, structured, globally recognized employment identity for MENA & African professionals. Ready for any remote opportunity.
+              A verified, structured, globally recognized employment identity for MENA based professionals. Ready for global work    
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 fade-in opacity-0 stagger-2">
               <Link to="/auth?mode=signup">
