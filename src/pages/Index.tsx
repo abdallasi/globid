@@ -1,51 +1,71 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Check, Globe, Shield, FileText, Users, ArrowRight } from "lucide-react";
-
-const SUPPORTED_COUNTRIES = [
-  { name: "UAE", flag: "🇦🇪" },
-  { name: "Saudi Arabia", flag: "🇸🇦" },
-  { name: "Egypt", flag: "🇪🇬" },
-  { name: "Morocco", flag: "🇲🇦" },
-  { name: "Jordan", flag: "🇯🇴" },
-  { name: "Tunisia", flag: "🇹🇳" },
-  { name: "Nigeria", flag: "🇳🇬" },
-  { name: "India", flag: "🇮🇳" },
-  { name: "Kenya", flag: "🇰🇪" },
-  { name: "Rwanda", flag: "🇷🇼" },
-  { name: "Uganda", flag: "🇺🇬" },
-  { name: "South Africa", flag: "🇿🇦" },
-  { name: "Tanzania", flag: "🇹🇿" },
-  { name: "Senegal", flag: "🇸🇳" },
-  { name: "Ghana", flag: "🇬🇭" },
-];
-
-const FEATURES = [
-  {
-    icon: Shield,
-    title: "Verified Identity",
-    description: "KYC-compliant identity verification accepted globally",
-  },
-  {
-    icon: FileText,
-    title: "Complete Documentation",
-    description: "All employment documents in one standardized pack",
-  },
-  {
-    icon: Globe,
-    title: "Global Recognition",
-    description: "Compatible with Deel, Remote.com, and all major EORs",
-  },
-  {
-    icon: Users,
-    title: "Instant Sharing",
-    description: "Share your passport with employers in one click",
-  },
-];
-
+const SUPPORTED_COUNTRIES = [{
+  name: "UAE",
+  flag: "🇦🇪"
+}, {
+  name: "Saudi Arabia",
+  flag: "🇸🇦"
+}, {
+  name: "Egypt",
+  flag: "🇪🇬"
+}, {
+  name: "Morocco",
+  flag: "🇲🇦"
+}, {
+  name: "Jordan",
+  flag: "🇯🇴"
+}, {
+  name: "Tunisia",
+  flag: "🇹🇳"
+}, {
+  name: "Nigeria",
+  flag: "🇳🇬"
+}, {
+  name: "India",
+  flag: "🇮🇳"
+}, {
+  name: "Kenya",
+  flag: "🇰🇪"
+}, {
+  name: "Rwanda",
+  flag: "🇷🇼"
+}, {
+  name: "Uganda",
+  flag: "🇺🇬"
+}, {
+  name: "South Africa",
+  flag: "🇿🇦"
+}, {
+  name: "Tanzania",
+  flag: "🇹🇿"
+}, {
+  name: "Senegal",
+  flag: "🇸🇳"
+}, {
+  name: "Ghana",
+  flag: "🇬🇭"
+}];
+const FEATURES = [{
+  icon: Shield,
+  title: "Verified Identity",
+  description: "KYC-compliant identity verification accepted globally"
+}, {
+  icon: FileText,
+  title: "Complete Documentation",
+  description: "All employment documents in one standardized pack"
+}, {
+  icon: Globe,
+  title: "Global Recognition",
+  description: "Compatible with Deel, Remote.com, and all major EORs"
+}, {
+  icon: Users,
+  title: "Instant Sharing",
+  description: "Share your passport with employers in one click"
+}];
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="apple-container">
@@ -69,8 +89,7 @@ const Index = () => {
       <section className="pt-32 pb-20 md:pt-44 md:pb-32">
         <div className="apple-container">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="apple-headline fade-in opacity-0">
-              The employment passport<br />for the world.
+            <h1 className="apple-headline fade-in opacity-0">Your Global​ <br />Work Passport​  
             </h1>
             <p className="apple-subheadline mt-6 max-w-2xl mx-auto fade-in opacity-0 stagger-1">
               A verified, structured, globally recognized employment identity for MENA & African professionals. Ready for any remote opportunity.
@@ -104,15 +123,10 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
-            {SUPPORTED_COUNTRIES.map((country) => (
-              <div
-                key={country.name}
-                className="apple-card p-4 text-center hover:shadow-md transition-shadow duration-200"
-              >
+            {SUPPORTED_COUNTRIES.map(country => <div key={country.name} className="apple-card p-4 text-center hover:shadow-md transition-shadow duration-200">
                 <div className="text-3xl mb-1">{country.flag}</div>
                 <div className="text-xs font-medium truncate">{country.name}</div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -145,15 +159,13 @@ const Index = () => {
             </h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {FEATURES.map((feature) => (
-              <div key={feature.title} className="apple-card p-8">
+            {FEATURES.map(feature => <div key={feature.title} className="apple-card p-8">
                 <feature.icon className="h-8 w-8 text-primary mb-4" />
                 <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {feature.description}
                 </p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -191,8 +203,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
