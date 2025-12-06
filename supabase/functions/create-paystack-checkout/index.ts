@@ -18,7 +18,7 @@ serve(async (req) => {
     if (!paystackSecretKey) {
       throw new Error("Paystack secret key not configured");
     }
-
+const paystackSecretKey = Deno.env.get("PAYSTACK_SECRET_KEY");
     // Initialize Paystack transaction
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
