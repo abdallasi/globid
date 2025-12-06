@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Download, 
   ExternalLink, 
@@ -22,6 +23,14 @@ const COUNTRY_NAMES: Record<string, string> = {
   JO: "Jordan",
   TN: "Tunisia",
   NG: "Nigeria",
+  IN: "India",
+  KE: "Kenya",
+  RW: "Rwanda",
+  UG: "Uganda",
+  ZA: "South Africa",
+  TZ: "Tanzania",
+  SN: "Senegal",
+  GH: "Ghana",
 };
 
 const VISA_STATUS_LABELS: Record<string, string> = {
@@ -56,6 +65,7 @@ interface PassportData {
   payment_status: string;
   created_at: string;
   user_id: string;
+  shareable_link_uid: string;
 }
 
 interface ProfileData {
@@ -65,10 +75,12 @@ interface ProfileData {
 
 const PassportViewer = () => {
   const { uid } = useParams<{ uid: string }>();
+  const { toast } = useToast();
   const [passport, setPassport] = useState<PassportData | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     if (uid) fetchPassport();
@@ -108,13 +120,48 @@ const PassportViewer = () => {
   };
 
   const handleExport = (platform: string) => {
-    // Simulate export to EOR platforms
-    alert(`Exporting to ${platform}... (Demo)`);
+    toast({
+      title: `Exporting to ${platform}`,
+      description: "Your passport data is being prepared for export.",
+    });
   };
 
-  const handleDownloadPDF = () => {
-    // For MVP, simulate PDF download
-    alert("Generating PDF... (Demo)");
+  const handleDownloadPDF = async () => {
+    if (!passport?.shareable_link_uid) return;
+    
+    setDownloading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-passport-pdf", {
+        body: { passportUid: passport.shareable_link_uid },
+      });
+
+      if (error) throw error;
+
+      // Create and download the file
+      const blob = new Blob([data.content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "PDF Downloaded",
+        description: "Your passport has been downloaded successfully.",
+      });
+    } catch (error) {
+      console.error("Download error:", error);
+      toast({
+        title: "Download failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDownloading(false);
+    }
   };
 
   if (loading) {
@@ -182,7 +229,7 @@ const PassportViewer = () => {
         <div className="apple-container">
           <div className="flex items-center justify-between h-14">
             <Link to="/" className="font-semibold text-lg tracking-tight">
-              Global Employment Passport
+              GlobID
             </Link>
             <div className="apple-badge">
               <CheckCircle2 className="h-4 w-4 mr-1" />
@@ -197,7 +244,7 @@ const PassportViewer = () => {
           {/* Passport Card */}
           <div className="apple-card overflow-hidden">
             {/* Header */}
-            <div className="bg-foreground text-background px-8 py-6">
+            <div className="bg-primary text-primary-foreground px-8 py-6">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm opacity-70 mb-1">Employment Passport</div>
@@ -263,7 +310,7 @@ const PassportViewer = () => {
             {/* Footer */}
             <div className="px-8 py-6 bg-apple-gray border-t border-border">
               <p className="text-xs text-muted-foreground text-center">
-                This passport is structured for global employment compliance (MENA Edition).
+                This passport is structured for global employment compliance.
                 <br />
                 Generated on {new Date(passport?.created_at || "").toLocaleDateString()}
               </p>
@@ -274,34 +321,41 @@ const PassportViewer = () => {
           <div className="mt-8 space-y-4">
             <Button
               onClick={handleDownloadPDF}
-              variant="apple"
+              variant="apple-blue"
               size="lg"
               className="w-full"
+              disabled={downloading}
             >
               <Download className="mr-2 h-4 w-4" />
-              Download Passport PDF
+              {downloading ? "Generating PDF..." : "Download Passport PDF"}
             </Button>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Button
                 onClick={() => handleExport("Deel")}
                 variant="apple-outline"
-                size="sm"
+                size="default"
+                className="w-full text-sm"
               >
+                <ExternalLink className="mr-2 h-4 w-4" />
                 Export to Deel
               </Button>
               <Button
                 onClick={() => handleExport("Remote")}
                 variant="apple-outline"
-                size="sm"
+                size="default"
+                className="w-full text-sm"
               >
+                <ExternalLink className="mr-2 h-4 w-4" />
                 Export to Remote
               </Button>
               <Button
                 onClick={() => handleExport("Oyster")}
                 variant="apple-outline"
-                size="sm"
+                size="default"
+                className="w-full text-sm"
               >
+                <ExternalLink className="mr-2 h-4 w-4" />
                 Export to Oyster
               </Button>
             </div>

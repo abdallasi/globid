@@ -18,6 +18,14 @@ const COUNTRIES = [
   { code: "JO", name: "Jordan" },
   { code: "TN", name: "Tunisia" },
   { code: "NG", name: "Nigeria" },
+  { code: "IN", name: "India" },
+  { code: "KE", name: "Kenya" },
+  { code: "RW", name: "Rwanda" },
+  { code: "UG", name: "Uganda" },
+  { code: "ZA", name: "South Africa" },
+  { code: "TZ", name: "Tanzania" },
+  { code: "SN", name: "Senegal" },
+  { code: "GH", name: "Ghana" },
   { code: "US", name: "United States" },
   { code: "GB", name: "United Kingdom" },
   { code: "DE", name: "Germany" },
@@ -32,10 +40,26 @@ const COMPANY_SIZES = [
   { value: "500+", label: "500+ employees" },
 ];
 
+// List of free email domains to reject
+const FREE_EMAIL_DOMAINS = [
+  "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com",
+  "icloud.com", "mail.com", "protonmail.com", "zoho.com", "yandex.com",
+  "gmx.com", "tutanota.com", "fastmail.com", "hushmail.com", "live.com",
+  "msn.com", "me.com", "qq.com", "163.com", "126.com"
+];
+
+const isWorkEmail = (email: string): boolean => {
+  const domain = email.split("@")[1]?.toLowerCase();
+  return domain ? !FREE_EMAIL_DOMAINS.includes(domain) : false;
+};
+
 const demoSchema = z.object({
   name: z.string().min(2, "Name is required"),
   company_name: z.string().min(2, "Company name is required"),
-  email: z.string().email("Please enter a valid email"),
+  email: z.string().email("Please enter a valid email").refine(
+    (email) => isWorkEmail(email),
+    "Please use your work email address"
+  ),
   phone: z.string().optional(),
   country: z.string().min(1, "Please select a country"),
   company_size: z.string().min(1, "Please select company size"),
@@ -150,7 +174,7 @@ const Demo = () => {
               For Companies
             </h1>
             <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-              See how Global Employment Passport can streamline your MENA hiring compliance.
+              See how GlobID can streamline your MENA & Africa hiring compliance.
             </p>
           </div>
 
@@ -194,6 +218,7 @@ const Demo = () => {
                   placeholder="john@company.com"
                 />
                 {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                <p className="text-xs text-muted-foreground">Please use your company email address</p>
               </div>
 
               <div className="space-y-2">

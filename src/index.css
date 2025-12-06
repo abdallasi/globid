@@ -17,8 +17,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
     
-    /* Brand Colors - Apple Blue */
-    --primary: 211 100% 50%;
+    /* Brand Colors - Midnight Blue */
+    --primary: 220 60% 20%;
     --primary-foreground: 0 0% 100%;
     
     /* Secondary - Light Gray */
@@ -40,7 +40,7 @@
     /* Borders & Inputs */
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 211 100% 50%;
+    --ring: 220 60% 20%;
     
     /* Radius - Apple uses subtle rounding */
     --radius: 0.75rem;
@@ -58,12 +58,12 @@
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary: 220 60% 20%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 96%;
     --sidebar-accent-foreground: 0 0% 20%;
     --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-ring: 220 60% 20%;
   }
 
   .dark {
@@ -73,7 +73,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
-    --primary: 211 100% 50%;
+    --primary: 220 60% 40%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -85,19 +85,19 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 211 100% 50%;
+    --ring: 220 60% 40%;
     --apple-gray: 0 0% 12%;
     --apple-gray-dark: 0 0% 20%;
     --apple-text-secondary: 0 0% 60%;
     --apple-divider: 0 0% 18%;
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary: 220 60% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-ring: 220 60% 40%;
   }
 }
 

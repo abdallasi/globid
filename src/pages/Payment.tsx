@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -8,7 +8,7 @@ import { ArrowLeft, Check, Shield, Globe, FileText } from "lucide-react";
 
 const FEATURES = [
   "Verified global employment identity",
-  "MENA-specific compliance documents",
+  "MENA & Africa-specific compliance documents",
   "Shareable passport link",
   "PDF export",
   "Deel, Remote, Oyster integration",
@@ -17,9 +17,11 @@ const FEATURES = [
 
 const Payment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
 
   useEffect(() => {
@@ -40,6 +42,14 @@ const Payment = () => {
     if (user) checkPaymentStatus();
   }, [user]);
 
+  // Handle Paystack callback
+  useEffect(() => {
+    const reference = searchParams.get("reference");
+    if (reference && user && !verifying) {
+      verifyPayment(reference);
+    }
+  }, [searchParams, user]);
+
   const checkPaymentStatus = async () => {
     const { data } = await supabase
       .from("employee_profiles")
@@ -52,36 +62,64 @@ const Payment = () => {
     }
   };
 
+  const verifyPayment = async (reference: string) => {
+    setVerifying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("verify-paystack-payment", {
+        body: { reference, userId: user?.id },
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast({
+          title: "Payment successful!",
+          description: "Your passport is now unlocked.",
+        });
+        navigate("/dashboard");
+      } else {
+        toast({
+          title: "Payment verification failed",
+          description: "Please try again or contact support.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Verification error:", error);
+      toast({
+        title: "Verification failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const handlePayment = async () => {
     if (!user) return;
     
     setLoading(true);
     
-    // For MVP, we'll simulate payment success
-    // In production, integrate with Paystack
     try {
-      // Simulate Paystack redirect
-      toast({
-        title: "Redirecting to Paystack...",
-        description: "Please complete your payment.",
-      });
+      const callbackUrl = `${window.location.origin}/payment`;
       
-      // Simulate successful payment after delay
-      setTimeout(async () => {
-        const { error } = await supabase
-          .from("employee_profiles")
-          .update({ payment_status: "paid" })
-          .eq("user_id", user.id);
+      const { data, error } = await supabase.functions.invoke("create-paystack-checkout", {
+        body: {
+          email: user.email,
+          userId: user.id,
+          amount: 50,
+          callbackUrl,
+        },
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        toast({
-          title: "Payment successful!",
-          description: "Your passport is now unlocked.",
-        });
-        
-        navigate("/dashboard");
-      }, 2000);
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No payment URL received");
+      }
     } catch (error) {
       console.error("Payment error:", error);
       toast({
@@ -92,6 +130,17 @@ const Payment = () => {
       setLoading(false);
     }
   };
+
+  if (verifying) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Verifying your payment...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isPaid) {
     return (
@@ -159,7 +208,7 @@ const Payment = () => {
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Processing..." : "Pay with Paystack"}
+              {loading ? "Redirecting to Paystack..." : "Pay with Paystack"}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
