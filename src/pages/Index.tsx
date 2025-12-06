@@ -10,6 +10,14 @@ const SUPPORTED_COUNTRIES = [
   { name: "Jordan", flag: "🇯🇴" },
   { name: "Tunisia", flag: "🇹🇳" },
   { name: "Nigeria", flag: "🇳🇬" },
+  { name: "India", flag: "🇮🇳" },
+  { name: "Kenya", flag: "🇰🇪" },
+  { name: "Rwanda", flag: "🇷🇼" },
+  { name: "Uganda", flag: "🇺🇬" },
+  { name: "South Africa", flag: "🇿🇦" },
+  { name: "Tanzania", flag: "🇹🇿" },
+  { name: "Senegal", flag: "🇸🇳" },
+  { name: "Ghana", flag: "🇬🇭" },
 ];
 
 const FEATURES = [
@@ -43,7 +51,7 @@ const Index = () => {
         <div className="apple-container">
           <div className="flex items-center justify-between h-14">
             <Link to="/" className="font-semibold text-lg tracking-tight">
-              Global Employment Passport
+              GlobID
             </Link>
             <div className="flex items-center gap-4">
               <Link to="/demo" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -65,7 +73,7 @@ const Index = () => {
               The employment passport<br />for the world.
             </h1>
             <p className="apple-subheadline mt-6 max-w-2xl mx-auto fade-in opacity-0 stagger-1">
-              A verified, structured, globally recognized employment identity for MENA professionals. Ready for any remote opportunity.
+              A verified, structured, globally recognized employment identity for MENA & African professionals. Ready for any remote opportunity.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 fade-in opacity-0 stagger-2">
               <Link to="/auth?mode=signup">
@@ -89,20 +97,20 @@ const Index = () => {
         <div className="apple-container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
-              Built for MENA talent.
+              Built for MENA & African talent.
             </h2>
             <p className="text-muted-foreground mt-4 text-lg">
               Comprehensive compliance coverage for the region's top markets.
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
             {SUPPORTED_COUNTRIES.map((country) => (
               <div
                 key={country.name}
-                className="apple-card p-6 text-center hover:shadow-md transition-shadow duration-200"
+                className="apple-card p-4 text-center hover:shadow-md transition-shadow duration-200"
               >
-                <div className="text-4xl mb-2">{country.flag}</div>
-                <div className="text-sm font-medium">{country.name}</div>
+                <div className="text-3xl mb-1">{country.flag}</div>
+                <div className="text-xs font-medium truncate">{country.name}</div>
               </div>
             ))}
           </div>
@@ -119,10 +127,10 @@ const Index = () => {
             <p className="text-muted-foreground mt-4 text-lg max-w-2xl mx-auto">
               Your passport exports directly to Deel, Remote.com, Oyster, and any Employer of Record platform.
             </p>
-            <div className="flex items-center justify-center gap-8 mt-12">
-              <div className="px-6 py-3 bg-secondary rounded-xl font-semibold text-lg">Deel</div>
-              <div className="px-6 py-3 bg-secondary rounded-xl font-semibold text-lg">Remote</div>
-              <div className="px-6 py-3 bg-secondary rounded-xl font-semibold text-lg">Oyster</div>
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-12">
+              <div className="px-5 py-2.5 bg-primary text-primary-foreground rounded-full font-semibold text-sm md:text-base whitespace-nowrap">Deel</div>
+              <div className="px-5 py-2.5 bg-primary text-primary-foreground rounded-full font-semibold text-sm md:text-base whitespace-nowrap">Remote</div>
+              <div className="px-5 py-2.5 bg-primary text-primary-foreground rounded-full font-semibold text-sm md:text-base whitespace-nowrap">Oyster</div>
             </div>
           </div>
         </div>
@@ -174,7 +182,7 @@ const Index = () => {
       <footer className="py-12 border-t border-border">
         <div className="apple-container">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <div>© 2024 Global Employment Passport. All rights reserved.</div>
+            <div>© 2024 GlobID. All rights reserved.</div>
             <div className="flex items-center gap-6">
               <Link to="/demo" className="hover:text-foreground transition-colors">For Companies</Link>
               <a href="#" className="hover:text-foreground transition-colors">Privacy</a>

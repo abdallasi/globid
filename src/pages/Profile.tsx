@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
-import { ArrowLeft, Upload, Check, X } from "lucide-react";
+import { ArrowLeft, Upload, Check, X, Camera } from "lucide-react";
 
 const COUNTRIES = [
   { code: "AE", name: "United Arab Emirates" },
@@ -18,6 +18,14 @@ const COUNTRIES = [
   { code: "JO", name: "Jordan" },
   { code: "TN", name: "Tunisia" },
   { code: "NG", name: "Nigeria" },
+  { code: "IN", name: "India" },
+  { code: "KE", name: "Kenya" },
+  { code: "RW", name: "Rwanda" },
+  { code: "UG", name: "Uganda" },
+  { code: "ZA", name: "South Africa" },
+  { code: "TZ", name: "Tanzania" },
+  { code: "SN", name: "Senegal" },
+  { code: "GH", name: "Ghana" },
 ];
 
 const VISA_STATUSES = [
@@ -109,17 +117,34 @@ const Profile = () => {
     setUploading(field);
     try {
       const fileExt = file.name.split(".").pop();
-      const filePath = `${user.id}/${field}-${Date.now()}.${fileExt}`;
+      const fileName = `${field}-${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      // Delete existing file if present
+      const existingUrl = profile[field as keyof ProfileData] as string;
+      if (existingUrl) {
+        const existingPath = existingUrl.split('/').slice(-2).join('/');
+        await supabase.storage.from("documents").remove([existingPath]);
+      }
 
       const { error: uploadError } = await supabase.storage
         .from("documents")
-        .upload(filePath, file);
+        .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
         .from("documents")
         .getPublicUrl(filePath);
+
+      // Update profile immediately
+      const updateData = { [field]: publicUrl };
+      const { error: updateError } = await supabase
+        .from("employee_profiles")
+        .update(updateData)
+        .eq("user_id", user.id);
+
+      if (updateError) throw updateError;
 
       handleChange(field, publicUrl);
       
@@ -421,7 +446,7 @@ const Profile = () => {
             </div>
 
             <div className="space-y-4">
-              <FileUploadField label="Passport" field="passport_file_url" />
+              <FileUploadField label="Passport Photo Page" field="passport_file_url" />
               {renderCountrySpecificFields()}
             </div>
 
@@ -507,7 +532,7 @@ const Profile = () => {
                 />
               </div>
 
-              <FileUploadField label="Address Proof" field="address_proof_file_url" />
+              <FileUploadField label="Proof of Address" field="address_proof_file_url" />
             </div>
 
             <Button 

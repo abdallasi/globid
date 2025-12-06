@@ -145,7 +145,7 @@ const Dashboard = () => {
         <div className="apple-container">
           <div className="flex items-center justify-between h-14">
             <Link to="/" className="font-semibold text-lg tracking-tight">
-              Global Employment Passport
+              GlobID
             </Link>
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground hidden sm:block">
