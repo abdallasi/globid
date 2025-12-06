@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
-const NGN_RATE = 1500; 
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -18,7 +18,7 @@ serve(async (req) => {
     if (!paystackSecretKey) {
       throw new Error("Paystack secret key not configured");
     }
-const paystackSecretKey = Deno.env.get("PAYSTACK_SECRET_KEY");
+
     // Initialize Paystack transaction
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
@@ -28,8 +28,8 @@ const paystackSecretKey = Deno.env.get("PAYSTACK_SECRET_KEY");
       },
       body: JSON.stringify({
         email,
-        amount: amount * NGN_RATE * 100, // Paystack uses kobo (cents)
-        currency: "NGN",
+        amount: amount * 100, // Paystack uses kobo (cents)
+        currency: "USD",
         callback_url: callbackUrl,
         metadata: {
           user_id: userId,
