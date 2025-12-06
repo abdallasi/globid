@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
-
+const NGN_RATE = 1500; 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -28,7 +28,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email,
-        amount: 7500000, // Paystack uses kobo (cents)
+        amount: amount * NGN_RATE * 100, // Paystack uses kobo (cents)
         currency: "NGN",
         callback_url: callbackUrl,
         metadata: {
