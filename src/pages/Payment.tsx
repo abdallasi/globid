@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -17,11 +17,9 @@ const FEATURES = [
 
 const Payment = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const [verifying, setVerifying] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
 
   useEffect(() => {
@@ -42,14 +40,6 @@ const Payment = () => {
     if (user) checkPaymentStatus();
   }, [user]);
 
-  // Handle Paystack callback
-  useEffect(() => {
-    const reference = searchParams.get("reference");
-    if (reference && user && !verifying) {
-      verifyPayment(reference);
-    }
-  }, [searchParams, user]);
-
   const checkPaymentStatus = async () => {
     const { data } = await supabase
       .from("employee_profiles")
@@ -62,54 +52,16 @@ const Payment = () => {
     }
   };
 
-  const verifyPayment = async (reference: string) => {
-    setVerifying(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("verify-paystack-payment", {
-        body: { reference, userId: user?.id },
-      });
-
-      if (error) throw error;
-
-      if (data.success) {
-        toast({
-          title: "Payment successful!",
-          description: "Your passport is now unlocked.",
-        });
-        navigate("/dashboard");
-      } else {
-        toast({
-          title: "Payment verification failed",
-          description: "Please try again or contact support.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Verification error:", error);
-      toast({
-        title: "Verification failed",
-        description: "Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setVerifying(false);
-    }
-  };
-
   const handlePayment = async () => {
     if (!user) return;
     
     setLoading(true);
     
     try {
-      const callbackUrl = `${window.location.origin}/payment`;
-      
       const { data, error } = await supabase.functions.invoke("create-paystack-checkout", {
         body: {
           email: user.email,
           userId: user.id,
-          amount: 50,
-          callbackUrl,
         },
       });
 
@@ -131,28 +83,17 @@ const Payment = () => {
     }
   };
 
-  if (verifying) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Verifying your payment...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (isPaid) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-4">
-            <Check className="h-8 w-8 text-success" />
+          <div className="w-16 h-16 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center mx-auto mb-4">
+            <Check className="h-8 w-8 text-green-500" />
           </div>
           <h1 className="text-2xl font-semibold">Already Paid</h1>
           <p className="text-muted-foreground mt-2">Your passport is fully unlocked.</p>
           <Link to="/dashboard">
-            <Button variant="apple-blue" className="mt-6">Go to Dashboard</Button>
+            <Button className="mt-6">Go to Dashboard</Button>
           </Link>
         </div>
       </div>
@@ -188,14 +129,14 @@ const Payment = () => {
           {/* Pricing Card */}
           <div className="apple-card p-8">
             <div className="text-center mb-8">
-              <div className="text-5xl font-semibold">$50</div>
-              <div className="text-muted-foreground mt-1">USD one-time</div>
+              <div className="text-5xl font-semibold">₦75,000</div>
+              <div className="text-muted-foreground mt-1">NGN one-time</div>
             </div>
 
             <div className="space-y-3 mb-8">
               {FEATURES.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
                   <span className="text-sm">{feature}</span>
                 </div>
               ))}
@@ -203,7 +144,6 @@ const Payment = () => {
 
             <Button
               onClick={handlePayment}
-              variant="apple-blue"
               size="lg"
               className="w-full"
               disabled={loading}

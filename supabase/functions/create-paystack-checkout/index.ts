@@ -12,12 +12,19 @@ serve(async (req) => {
   }
 
   try {
-    const { email, userId, amount, callbackUrl } = await req.json();
+    const { email, userId } = await req.json();
+    
+    // Auto-detect origin for callback URL
+    const origin = req.headers.get("origin") || "https://globid.vercel.app";
+    const callbackUrl = `${origin}/payment/success`;
 
     const paystackSecretKey = Deno.env.get("PAYSTACK_SECRET_KEY");
     if (!paystackSecretKey) {
       throw new Error("Paystack secret key not configured");
     }
+
+    // Generate unique reference
+    const reference = `globid_${userId.substring(0, 8)}_${Date.now()}`;
 
     // Initialize Paystack transaction
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
@@ -30,6 +37,7 @@ serve(async (req) => {
         email,
         amount: 7500000, // 75,000 NGN in kobo (hardcoded for Nigerian Paystack)
         currency: "NGN",
+        reference,
         callback_url: callbackUrl,
         metadata: {
           user_id: userId,

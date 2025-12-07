@@ -8,6 +8,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Payment from "./pages/Payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentError from "./pages/PaymentError";
 import PassportViewer from "./pages/PassportViewer";
 import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
@@ -26,7 +28,10 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/error" element={<PaymentError />} />
           <Route path="/passport/:uid" element={<PassportViewer />} />
+          <Route path="/passport/setup" element={<Profile />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
