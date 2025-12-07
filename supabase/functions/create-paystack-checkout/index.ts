@@ -28,8 +28,8 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email,
-        amount: amount * 100, // Paystack uses kobo (cents)
-        currency: "USD",
+        amount: 7500000, // 75,000 NGN in kobo (hardcoded for Nigerian Paystack)
+        currency: "NGN",
         callback_url: callbackUrl,
         metadata: {
           user_id: userId,
