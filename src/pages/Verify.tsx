@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
-const PaymentSuccess = () => {
+const Verify = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
+  const [status, setStatus] = useState<"verifying" | "error">("verifying");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const verifyPayment = async () => {
-      const reference = searchParams.get("reference") || searchParams.get("trxref");
+      const reference = searchParams.get("reference");
       
       if (!reference) {
         setStatus("error");
@@ -33,12 +32,10 @@ const PaymentSuccess = () => {
           body: { reference, userId: user.id },
         });
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         if (data?.success) {
-          setStatus("success");
+          navigate("/success", { replace: true });
         } else {
           setStatus("error");
           setErrorMessage(data?.message || "Payment verification failed.");
@@ -51,25 +48,7 @@ const PaymentSuccess = () => {
     };
 
     verifyPayment();
-  }, [searchParams]);
-
-  if (status === "verifying") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="text-center animate-fade-in">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          </div>
-          <h1 className="text-2xl font-semibold text-foreground mb-2">
-            Verifying Payment
-          </h1>
-          <p className="text-muted-foreground">
-            Please wait while we confirm your transaction...
-          </p>
-        </div>
-      </div>
-    );
-  }
+  }, [searchParams, navigate]);
 
   if (status === "error") {
     return (
@@ -91,17 +70,17 @@ const PaymentSuccess = () => {
             </svg>
           </div>
           <h1 className="text-2xl font-semibold text-foreground mb-2">
-            Payment Not Verified
+            Verification Failed
           </h1>
           <p className="text-muted-foreground mb-8">
             {errorMessage}
           </p>
-          <Button 
+          <button 
             onClick={() => navigate("/payment")}
-            className="px-8"
+            className="px-8 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-opacity"
           >
             Try Again
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -109,26 +88,19 @@ const PaymentSuccess = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="text-center animate-fade-in max-w-md">
-        <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-          <CheckCircle className="w-10 h-10 text-green-500" strokeWidth={1.5} />
+      <div className="text-center animate-fade-in">
+        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-primary animate-spin" />
         </div>
-        <h1 className="text-3xl font-semibold text-foreground mb-3">
-          Payment Confirmed
+        <h1 className="text-2xl font-semibold text-foreground mb-2">
+          Verifying Payment
         </h1>
-        <p className="text-lg text-muted-foreground mb-10">
-          Your GlobID Passport is now unlocked.
+        <p className="text-muted-foreground">
+          Please wait while we confirm your transaction...
         </p>
-        <Button 
-          onClick={() => navigate("/profile")}
-          size="lg"
-          className="px-10 py-6 text-base"
-        >
-          Continue
-        </Button>
       </div>
     </div>
   );
 };
 
-export default PaymentSuccess;
+export default Verify;

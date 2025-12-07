@@ -4,7 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
-import { ArrowLeft, Check, Shield, Globe, FileText } from "lucide-react";
+import { ArrowLeft, Check, Shield, Globe, FileText, Loader2 } from "lucide-react";
+
+declare global {
+  interface Window {
+    PaystackPop: any;
+  }
+}
 
 const FEATURES = [
   "Verified global employment identity",
@@ -21,6 +27,20 @@ const Payment = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+
+  useEffect(() => {
+    // Load Paystack inline script
+    const script = document.createElement("script");
+    script.src = "https://js.paystack.co/v1/inline.js";
+    script.async = true;
+    script.onload = () => setScriptLoaded(true);
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -53,11 +73,12 @@ const Payment = () => {
   };
 
   const handlePayment = async () => {
-    if (!user) return;
+    if (!user || !scriptLoaded) return;
     
     setLoading(true);
     
     try {
+      // Get initialization data from backend
       const { data, error } = await supabase.functions.invoke("create-paystack-checkout", {
         body: {
           email: user.email,
@@ -67,11 +88,27 @@ const Payment = () => {
 
       if (error) throw error;
 
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error("No payment URL received");
-      }
+      // Use Paystack inline popup
+      const handler = window.PaystackPop.setup({
+        key: data.publicKey,
+        email: user.email,
+        amount: 7500000, // 75,000 NGN in kobo
+        currency: "NGN",
+        ref: data.reference,
+        callback: function(response: { reference: string }) {
+          // Redirect to verify page with reference
+          window.location.href = `/verify?reference=${response.reference}`;
+        },
+        onClose: function() {
+          setLoading(false);
+          toast({
+            title: "Payment cancelled",
+            description: "You closed the payment window.",
+          });
+        },
+      });
+
+      handler.openIframe();
     } catch (error) {
       console.error("Payment error:", error);
       toast({
@@ -129,8 +166,8 @@ const Payment = () => {
           {/* Pricing Card */}
           <div className="apple-card p-8">
             <div className="text-center mb-8">
-              <div className="text-5xl font-semibold">₦75,000</div>
-              <div className="text-muted-foreground mt-1">NGN one-time</div>
+              <div className="text-5xl font-semibold">$50</div>
+              <div className="text-muted-foreground mt-1">USD one-time</div>
             </div>
 
             <div className="space-y-3 mb-8">
@@ -146,9 +183,14 @@ const Payment = () => {
               onClick={handlePayment}
               size="lg"
               className="w-full"
-              disabled={loading}
+              disabled={loading || !scriptLoaded}
             >
-              {loading ? "Redirecting to Paystack..." : "Pay with Paystack"}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </span>
+              ) : "Pay with Paystack"}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
