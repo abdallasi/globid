@@ -114,58 +114,6 @@ const Profile = () => {
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = async (field: string, file: File) => {
-    if (!user) return;
-    
-    setUploading(field);
-    try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${field}-${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-
-      // Delete existing file if present
-      const existingUrl = profile[field as keyof ProfileData] as string;
-      if (existingUrl) {
-        const existingPath = existingUrl.split('/').slice(-2).join('/');
-        await supabase.storage.from("documents").remove([existingPath]);
-      }
-
-      const { error: uploadError } = await supabase.storage
-        .from("documents")
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from("documents")
-        .getPublicUrl(filePath);
-
-      // Update profile immediately
-      const updateData = { [field]: publicUrl };
-      const { error: updateError } = await supabase
-        .from("employee_profiles")
-        .update(updateData)
-        .eq("user_id", user.id);
-
-      if (updateError) throw updateError;
-
-      handleChange(field, publicUrl);
-      
-      toast({
-        title: "File uploaded",
-        description: "Your document has been uploaded successfully.",
-      });
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast({
-        title: "Upload failed",
-        description: "Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(null);
-    }
-  };
 
   const handleSave = async (isSignatureStep = false) => {
     if (!user) return;
@@ -220,8 +168,13 @@ const Profile = () => {
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [uploadSuccess, setUploadSuccess] = useState<Record<string, boolean>>({});
 
-  const handleFileUploadWithProgress = async (field: string, file: File) => {
-    if (!user) return;
+  const handleFileUploadWithProgress = async (field: keyof ProfileData, file: File) => {
+    if (!user) {
+      console.log("No user found, aborting upload");
+      return;
+    }
+    
+    console.log("Starting upload for field:", field, "file:", file.name);
     
     setUploading(field);
     setUploadProgress(prev => ({ ...prev, [field]: 0 }));
@@ -241,18 +194,23 @@ const Profile = () => {
     
     try {
       const fileExt = file.name.split(".").pop();
-      const fileName = `${field}-${Date.now()}.${fileExt}`;
+      const fileName = `${String(field)}-${Date.now()}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`;
 
-      const existingUrl = profile[field as keyof ProfileData] as string;
+      console.log("Uploading to path:", filePath);
+
+      const existingUrl = profile[field] as string;
       if (existingUrl) {
         const existingPath = existingUrl.split('/').slice(-2).join('/');
+        console.log("Removing existing file:", existingPath);
         await supabase.storage.from("documents").remove([existingPath]);
       }
 
-      const { error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from("documents")
         .upload(filePath, file, { upsert: true });
+
+      console.log("Upload result:", { uploadData, uploadError });
 
       if (uploadError) throw uploadError;
 
@@ -260,17 +218,22 @@ const Profile = () => {
         .from("documents")
         .getPublicUrl(filePath);
 
+      console.log("Public URL:", publicUrl);
+
       const updateData = { [field]: publicUrl };
-      const { error: updateError } = await supabase
+      const { data: updateResult, error: updateError } = await supabase
         .from("employee_profiles")
         .update(updateData)
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .select();
+
+      console.log("Update result:", { updateResult, updateError });
 
       if (updateError) throw updateError;
 
       clearInterval(progressInterval);
       setUploadProgress(prev => ({ ...prev, [field]: 100 }));
-      handleChange(field, publicUrl);
+      setProfile(prev => ({ ...prev, [field]: publicUrl }));
       setUploadSuccess(prev => ({ ...prev, [field]: true }));
       
       setTimeout(() => {
@@ -278,11 +241,11 @@ const Profile = () => {
       }, 2000);
       
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("Upload error for field", field, ":", error);
       clearInterval(progressInterval);
       toast({
         title: "Upload failed",
-        description: "Please try again.",
+        description: error instanceof Error ? error.message : "Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -298,14 +261,23 @@ const Profile = () => {
     optional = false
   }: { 
     label: string; 
-    field: string; 
+    field: keyof ProfileData; 
     accept?: string;
     optional?: boolean;
   }) => {
-    const value = profile[field as keyof ProfileData];
+    const value = profile[field];
     const isUploading = uploading === field;
     const progress = uploadProgress[field] || 0;
     const showSuccess = uploadSuccess[field];
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        handleFileUploadWithProgress(field, file);
+      }
+      // Reset input to allow re-upload of same file
+      e.target.value = '';
+    };
     
     return (
       <div className="space-y-2">
@@ -332,41 +304,44 @@ const Profile = () => {
               </button>
             </div>
           ) : (
-            <label className="block cursor-pointer">
-              <div className={`flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
-                isUploading ? '' : 'hover:bg-secondary/50 hover:border-primary/30'
-              }`}>
-                <input
-                  type="file"
-                  accept={accept}
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleFileUploadWithProgress(field, file);
-                  }}
-                  disabled={isUploading}
-                />
-                {isUploading ? (
-                  <div className="w-full space-y-3">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      <span className="text-sm text-muted-foreground">Uploading...</span>
-                    </div>
-                    <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
+            <div 
+              className={`flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
+                isUploading ? '' : 'hover:bg-secondary/50 hover:border-primary/30 cursor-pointer'
+              }`}
+              onClick={() => {
+                if (!isUploading) {
+                  document.getElementById(`file-input-${field}`)?.click();
+                }
+              }}
+            >
+              <input
+                id={`file-input-${field}`}
+                type="file"
+                accept={accept}
+                className="hidden"
+                onChange={handleFileChange}
+                disabled={isUploading}
+              />
+              {isUploading ? (
+                <div className="w-full space-y-3">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm text-muted-foreground">Uploading...</span>
                   </div>
-                ) : (
-                  <>
-                    <Upload className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">Upload document</span>
-                  </>
-                )}
-              </div>
-            </label>
+                  <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Upload className="h-5 w-5 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Upload document</span>
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -570,7 +545,7 @@ const Profile = () => {
             </div>
 
             <div className="space-y-4">
-              <FileUploadField label="Passport Upload" field="passport_file_url" />
+              <FileUploadField label="Passport Photo" field="passport_file_url" />
               {renderCountrySpecificFields()}
             </div>
 
