@@ -162,9 +162,16 @@ const Dashboard = () => {
       <div className="apple-container py-8 md:py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
-            Your Passport
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+              Your Passport
+            </h1>
+            {!isComplete && (
+              <span className="inline-flex items-center px-3 py-1 text-xs font-medium text-muted-foreground bg-secondary rounded-md">
+                Waiting for employer tag
+              </span>
+            )}
+          </div>
           <p className="text-muted-foreground mt-1">
             Complete all steps to generate your employment passport.
           </p>

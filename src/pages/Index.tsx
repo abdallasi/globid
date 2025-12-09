@@ -46,6 +46,9 @@ const SUPPORTED_COUNTRIES = [{
 }, {
   name: "Ghana",
   flag: "🇬🇭"
+}, {
+  name: "Canada",
+  flag: "🇨🇦"
 }];
 const FEATURES = [{
   icon: Shield,
@@ -86,23 +89,32 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 md:pt-44 md:pb-32">
+      <section className="pt-28 pb-16 md:pt-40 md:pb-28">
         <div className="apple-container">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="apple-headline fade-in opacity-0 py-0 my-[10px] px-[20px] text-4xl">Your Global​ <br />Work Passport​  
+          <div className="max-w-3xl mx-auto text-center px-4">
+            <h1 className="text-[2.5rem] md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] fade-in opacity-0">
+              Your Global Work Passport
             </h1>
-            <p className="apple-subheadline mt-6 max-w-2xl mx-auto fade-in opacity-0 stagger-1 my-[22px]">
-              A verified, structured, globally recognized employment identity for MENA based professionals. Ready for global work    
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 fade-in opacity-0 stagger-2">
+            <div className="mt-6 md:mt-8 space-y-1 fade-in opacity-0 stagger-1">
+              <p className="text-lg md:text-xl text-muted-foreground leading-snug">
+                A verified identity for MENA professionals.
+              </p>
+              <p className="text-lg md:text-xl text-muted-foreground leading-snug">
+                Structured. Trusted. Borderless.
+              </p>
+              <p className="text-lg md:text-xl text-foreground font-medium leading-snug">
+                Ready for global work.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10 md:mt-12 fade-in opacity-0 stagger-2">
               <Link to="/auth?mode=signup">
-                <Button variant="apple-blue" size="lg" className="min-w-[240px]">
+                <Button variant="apple-blue" size="lg" className="min-w-[220px] rounded-lg shadow-none">
                   Create Your Passport — $50
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/demo">
-                <Button variant="apple-outline" size="lg">
+                <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground rounded-lg">
                   For Companies → Book Demo
                 </Button>
               </Link>
