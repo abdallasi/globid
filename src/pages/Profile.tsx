@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
-import { ArrowLeft, Upload, Check, X, Camera } from "lucide-react";
+import { ArrowLeft, Upload, Check, X } from "lucide-react";
+import CompletionModal from "@/components/CompletionModal";
 
 const COUNTRIES = [
   { code: "AE", name: "United Arab Emirates" },
@@ -26,6 +27,7 @@ const COUNTRIES = [
   { code: "TZ", name: "Tanzania" },
   { code: "SN", name: "Senegal" },
   { code: "GH", name: "Ghana" },
+  { code: "CA", name: "Canada" },
 ];
 
 const VISA_STATUSES = [
@@ -71,6 +73,7 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<Partial<ProfileData>>({});
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showCompletion, setShowCompletion] = useState(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -164,7 +167,7 @@ const Profile = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async (isSignatureStep = false) => {
     if (!user) return;
     
     setSaving(true);
@@ -175,6 +178,26 @@ const Profile = () => {
         .eq("user_id", user.id);
 
       if (error) throw error;
+
+      // Check if profile is complete after signature step
+      if (isSignatureStep && profile.signature_file_url) {
+        const { data: fullProfile } = await supabase
+          .from("employee_profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .single();
+        
+        const isComplete = fullProfile?.payment_status === "paid" && 
+                          fullProfile?.nationality && 
+                          fullProfile?.passport_file_url && 
+                          fullProfile?.bank_account_number && 
+                          fullProfile?.signature_file_url;
+        
+        if (isComplete) {
+          setShowCompletion(true);
+          return;
+        }
+      }
 
       toast({
         title: "Saved",
@@ -194,54 +217,155 @@ const Profile = () => {
     }
   };
 
+  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
+  const [uploadSuccess, setUploadSuccess] = useState<Record<string, boolean>>({});
+
+  const handleFileUploadWithProgress = async (field: string, file: File) => {
+    if (!user) return;
+    
+    setUploading(field);
+    setUploadProgress(prev => ({ ...prev, [field]: 0 }));
+    setUploadSuccess(prev => ({ ...prev, [field]: false }));
+    
+    // Simulate progress
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => {
+        const current = prev[field] || 0;
+        if (current >= 90) {
+          clearInterval(progressInterval);
+          return prev;
+        }
+        return { ...prev, [field]: current + 10 };
+      });
+    }, 100);
+    
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${field}-${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const existingUrl = profile[field as keyof ProfileData] as string;
+      if (existingUrl) {
+        const existingPath = existingUrl.split('/').slice(-2).join('/');
+        await supabase.storage.from("documents").remove([existingPath]);
+      }
+
+      const { error: uploadError } = await supabase.storage
+        .from("documents")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("documents")
+        .getPublicUrl(filePath);
+
+      const updateData = { [field]: publicUrl };
+      const { error: updateError } = await supabase
+        .from("employee_profiles")
+        .update(updateData)
+        .eq("user_id", user.id);
+
+      if (updateError) throw updateError;
+
+      clearInterval(progressInterval);
+      setUploadProgress(prev => ({ ...prev, [field]: 100 }));
+      handleChange(field, publicUrl);
+      setUploadSuccess(prev => ({ ...prev, [field]: true }));
+      
+      setTimeout(() => {
+        setUploadSuccess(prev => ({ ...prev, [field]: false }));
+      }, 2000);
+      
+    } catch (error) {
+      console.error("Upload error:", error);
+      clearInterval(progressInterval);
+      toast({
+        title: "Upload failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(null);
+      setUploadProgress(prev => ({ ...prev, [field]: 0 }));
+    }
+  };
+
   const FileUploadField = ({ 
     label, 
     field, 
-    accept = ".pdf,.jpg,.jpeg,.png" 
+    accept = ".pdf,.jpg,.jpeg,.png",
+    optional = false
   }: { 
     label: string; 
     field: string; 
     accept?: string;
+    optional?: boolean;
   }) => {
     const value = profile[field as keyof ProfileData];
     const isUploading = uploading === field;
+    const progress = uploadProgress[field] || 0;
+    const showSuccess = uploadSuccess[field];
     
     return (
       <div className="space-y-2">
-        <Label>{label}</Label>
+        <Label className="flex items-center gap-2">
+          {label}
+          {optional && <span className="text-xs text-muted-foreground font-normal">(Optional)</span>}
+        </Label>
         <div className="relative">
-          {value ? (
-            <div className="flex items-center gap-2 p-3 bg-success/5 border border-success/20 rounded-xl">
+          {showSuccess ? (
+            <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl animate-fade-in">
               <Check className="h-4 w-4 text-success" />
-              <span className="text-sm flex-1 truncate">Document uploaded</span>
+              <span className="text-sm text-success font-medium">Uploaded ✓</span>
+            </div>
+          ) : value ? (
+            <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl">
+              <Check className="h-4 w-4 text-success" />
+              <span className="text-sm flex-1 truncate text-foreground">Document uploaded</span>
               <button
                 type="button"
                 onClick={() => handleChange(field, "")}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
           ) : (
-            <label className="flex items-center justify-center gap-2 p-6 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
-              <input
-                type="file"
-                accept={accept}
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileUpload(field, file);
-                }}
-                disabled={isUploading}
-              />
-              {isUploading ? (
-                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Upload className="h-5 w-5 text-muted-foreground" />
-              )}
-              <span className="text-sm text-muted-foreground">
-                {isUploading ? "Uploading..." : "Upload document"}
-              </span>
+            <label className="block cursor-pointer">
+              <div className={`flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
+                isUploading ? '' : 'hover:bg-secondary/50 hover:border-primary/30'
+              }`}>
+                <input
+                  type="file"
+                  accept={accept}
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFileUploadWithProgress(field, file);
+                  }}
+                  disabled={isUploading}
+                />
+                {isUploading ? (
+                  <div className="w-full space-y-3">
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      <span className="text-sm text-muted-foreground">Uploading...</span>
+                    </div>
+                    <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="h-5 w-5 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">Upload document</span>
+                  </>
+                )}
+              </div>
             </label>
           )}
         </div>
@@ -426,7 +550,7 @@ const Profile = () => {
             </div>
 
             <Button 
-              onClick={handleSave} 
+              onClick={() => handleSave()}
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -446,12 +570,12 @@ const Profile = () => {
             </div>
 
             <div className="space-y-4">
-              <FileUploadField label="Passport Photo Page" field="passport_file_url" />
+              <FileUploadField label="Passport Upload" field="passport_file_url" />
               {renderCountrySpecificFields()}
             </div>
 
             <Button 
-              onClick={handleSave} 
+              onClick={() => handleSave()}
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -500,7 +624,10 @@ const Profile = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="swift_code">SWIFT/BIC Code</Label>
+                <Label htmlFor="swift_code" className="flex items-center gap-2">
+                  SWIFT/BIC Code
+                  <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                </Label>
                 <Input
                   id="swift_code"
                   value={profile.swift_code || ""}
@@ -511,7 +638,10 @@ const Profile = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="tax_id">Tax ID</Label>
+                <Label htmlFor="tax_id" className="flex items-center gap-2">
+                  Tax ID
+                  <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                </Label>
                 <Input
                   id="tax_id"
                   value={profile.tax_id || ""}
@@ -532,11 +662,11 @@ const Profile = () => {
                 />
               </div>
 
-              <FileUploadField label="Proof of Address" field="address_proof_file_url" />
+              <FileUploadField label="Proof of Address" field="address_proof_file_url" optional={true} />
             </div>
 
             <Button 
-              onClick={handleSave} 
+              onClick={() => handleSave()}
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -567,7 +697,7 @@ const Profile = () => {
             </div>
 
             <Button 
-              onClick={handleSave} 
+              onClick={() => handleSave(true)} 
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -578,6 +708,12 @@ const Profile = () => {
           </div>
         )}
       </div>
+
+      {/* Completion Modal */}
+      <CompletionModal 
+        isOpen={showCompletion} 
+        onContinue={() => navigate("/dashboard")} 
+      />
     </div>
   );
 };
