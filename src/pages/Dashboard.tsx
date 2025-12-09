@@ -166,7 +166,7 @@ const Dashboard = () => {
             <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
               Your Passport
             </h1>
-            {!isComplete && (
+            {isComplete && (
               <span className="inline-flex items-center px-3 py-1 text-xs font-medium text-muted-foreground bg-secondary rounded-md">
                 Waiting for employer tag
               </span>
