@@ -12,7 +12,8 @@ import {
   CreditCard, 
   MapPin,
   CheckCircle2,
-  Globe
+  Globe,
+  Shield
 } from "lucide-react";
 
 const COUNTRY_NAMES: Record<string, string> = {
@@ -31,6 +32,11 @@ const COUNTRY_NAMES: Record<string, string> = {
   TZ: "Tanzania",
   SN: "Senegal",
   GH: "Ghana",
+  CA: "Canada",
+  US: "United States",
+  GB: "United Kingdom",
+  DE: "Germany",
+  FR: "France",
 };
 
 const VISA_STATUS_LABELS: Record<string, string> = {
@@ -103,7 +109,6 @@ const PassportViewer = () => {
 
       setPassport(passportData);
 
-      // Fetch profile data
       const { data: profileData } = await supabase
         .from("profiles")
         .select("full_name, email")
@@ -137,7 +142,6 @@ const PassportViewer = () => {
 
       if (error) throw error;
 
-      // Create and download the file
       const blob = new Blob([data.content], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -164,9 +168,19 @@ const PassportViewer = () => {
     }
   };
 
+  const getCountryName = (code: string | null) => {
+    if (!code) return null;
+    return COUNTRY_NAMES[code] || code;
+  };
+
+  const getVisaLabel = (status: string | null) => {
+    if (!status) return null;
+    return VISA_STATUS_LABELS[status] || status;
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-apple-gray flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -174,14 +188,17 @@ const PassportViewer = () => {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-apple-gray flex items-center justify-center px-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold">Passport Not Found</h1>
-          <p className="text-muted-foreground mt-2">
-            This passport link is invalid or has expired.
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+            <FileText className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight">Passport Not Found</h1>
+          <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+            This passport link is invalid or has expired. Please check the URL or contact the passport owner.
           </p>
           <Link to="/">
-            <Button variant="apple-blue" className="mt-6">Go Home</Button>
+            <Button variant="apple-blue" className="mt-8">Go Home</Button>
           </Link>
         </div>
       </div>
@@ -197,168 +214,199 @@ const PassportViewer = () => {
     title: string; 
     children: React.ReactNode;
   }) => (
-    <div className="py-6">
-      <div className="flex items-center gap-3 mb-4">
-        <Icon className="h-5 w-5 text-primary" />
-        <h2 className="font-semibold">{title}</h2>
+    <div className="py-5 sm:py-6">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Icon className="h-4 w-4 text-primary" />
+        </div>
+        <h2 className="font-semibold text-[15px]">{title}</h2>
       </div>
-      {children}
+      <div className="ml-0 sm:ml-10">{children}</div>
     </div>
   );
 
   const InfoRow = ({ label, value }: { label: string; value: string | null }) => (
-    <div className="flex justify-between py-2">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="font-medium">{value || "—"}</span>
+    <div className="flex justify-between items-center py-2.5 border-b border-border/50 last:border-0">
+      <span className="text-muted-foreground text-sm">{label}</span>
+      <span className="font-medium text-sm text-right">{value || "Not provided"}</span>
     </div>
   );
 
   const DocumentBadge = ({ label, url }: { label: string; url: string | null }) => (
-    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-      url ? "bg-success/10 text-success" : "bg-secondary text-muted-foreground"
+    <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+      url 
+        ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800" 
+        : "bg-muted text-muted-foreground border border-border"
     }`}>
-      {url ? <CheckCircle2 className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
-      <span className="text-sm">{label}</span>
+      {url ? <CheckCircle2 className="h-3.5 w-3.5" /> : <FileText className="h-3.5 w-3.5" />}
+      <span>{label}</span>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-apple-gray">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <nav className="bg-background border-b border-border/50">
-        <div className="apple-container">
+      <nav className="border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
             <Link to="/" className="font-semibold text-lg tracking-tight">
               GlobID
             </Link>
-            <div className="apple-badge">
-              <CheckCircle2 className="h-4 w-4 mr-1" />
-              Verified
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
+              <Shield className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Verified</span>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="apple-container py-8 md:py-12">
-        <div className="max-w-2xl mx-auto">
-          {/* Passport Card */}
-          <div className="apple-card overflow-hidden">
-            {/* Header */}
-            <div className="bg-primary text-primary-foreground px-8 py-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm opacity-70 mb-1">Employment Passport</div>
-                  <h1 className="text-2xl font-semibold">{profile?.full_name || "—"}</h1>
-                </div>
-                <Globe className="h-10 w-10 opacity-50" />
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        {/* Passport Card */}
+        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+          {/* Header */}
+          <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground px-6 sm:px-8 py-6 sm:py-8">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="text-xs uppercase tracking-wider opacity-70 font-medium">Employment Passport</div>
+                <h1 className="text-xl sm:text-2xl font-semibold">{profile?.full_name || "—"}</h1>
+                {profile?.email && (
+                  <p className="text-sm opacity-70">{profile.email}</p>
+                )}
               </div>
-            </div>
-
-            {/* Content */}
-            <div className="px-8 divide-y divide-border">
-              {/* Identity */}
-              <Section icon={User} title="Identity">
-                <InfoRow label="Nationality" value={passport?.nationality ? COUNTRY_NAMES[passport.nationality] : null} />
-                <InfoRow label="Residence" value={passport?.residence_country ? COUNTRY_NAMES[passport.residence_country] : null} />
-                <InfoRow label="Visa Status" value={passport?.visa_status ? VISA_STATUS_LABELS[passport.visa_status] : null} />
-              </Section>
-
-              {/* Documents */}
-              <Section icon={FileText} title="Verified Documents">
-                <div className="flex flex-wrap gap-2">
-                  <DocumentBadge label="Passport" url={passport?.passport_file_url || null} />
-                  <DocumentBadge label="National ID" url={passport?.national_id_file_url || null} />
-                  {passport?.emirates_id_file_url && <DocumentBadge label="Emirates ID" url={passport.emirates_id_file_url} />}
-                  {passport?.iqama_file_url && <DocumentBadge label="Iqama" url={passport.iqama_file_url} />}
-                  {passport?.residency_permit_file_url && <DocumentBadge label="Residency Visa" url={passport.residency_permit_file_url} />}
-                  {passport?.cnie_file_url && <DocumentBadge label="CNIE" url={passport.cnie_file_url} />}
-                  {passport?.address_proof_file_url && <DocumentBadge label="Address Proof" url={passport.address_proof_file_url} />}
-                </div>
-              </Section>
-
-              {/* Banking */}
-              <Section icon={CreditCard} title="Banking Information">
-                <InfoRow label="Bank Country" value={passport?.bank_account_country ? COUNTRY_NAMES[passport.bank_account_country] : null} />
-                <InfoRow label="Account Number" value={passport?.bank_account_number ? `****${passport.bank_account_number.slice(-4)}` : null} />
-                <InfoRow label="SWIFT/BIC" value={passport?.swift_code || null} />
-              </Section>
-
-              {/* Tax */}
-              <Section icon={Building2} title="Tax Information">
-                <InfoRow label="Tax ID" value={passport?.tax_id || null} />
-                {passport?.nin && <InfoRow label="NIN" value={passport.nin} />}
-              </Section>
-
-              {/* Address */}
-              <Section icon={MapPin} title="Address">
-                <p className="text-sm">{passport?.address || "—"}</p>
-              </Section>
-
-              {/* Signature */}
-              {passport?.signature_file_url && (
-                <div className="py-6">
-                  <div className="text-sm text-muted-foreground mb-2">Signature</div>
-                  <img 
-                    src={passport.signature_file_url} 
-                    alt="Signature" 
-                    className="h-16 object-contain"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-8 py-6 bg-apple-gray border-t border-border">
-              <p className="text-xs text-muted-foreground text-center">
-                This passport is structured for global employment compliance.
-                <br />
-                Generated on {new Date(passport?.created_at || "").toLocaleDateString()}
-              </p>
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                <Globe className="h-6 w-6 opacity-70" />
+              </div>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="mt-8 space-y-4">
-            <Button
-              onClick={handleDownloadPDF}
-              variant="apple-blue"
-              size="lg"
-              className="w-full"
-              disabled={downloading}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              {downloading ? "Generating PDF..." : "Download Passport PDF"}
-            </Button>
+          {/* Content */}
+          <div className="px-6 sm:px-8 divide-y divide-border">
+            {/* Identity */}
+            <Section icon={User} title="Identity">
+              <div className="space-y-0">
+                <InfoRow label="Nationality" value={getCountryName(passport?.nationality)} />
+                <InfoRow label="Country of Residence" value={getCountryName(passport?.residence_country)} />
+                <InfoRow label="Visa Status" value={getVisaLabel(passport?.visa_status)} />
+              </div>
+            </Section>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <Button
-                onClick={() => handleExport("Deel")}
-                variant="apple-outline"
-                size="default"
-                className="w-full text-sm"
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Export to Deel
-              </Button>
-              <Button
-                onClick={() => handleExport("Remote")}
-                variant="apple-outline"
-                size="default"
-                className="w-full text-sm"
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Export to Remote
-              </Button>
-              <Button
-                onClick={() => handleExport("Oyster")}
-                variant="apple-outline"
-                size="default"
-                className="w-full text-sm"
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Export to Oyster
-              </Button>
-            </div>
+            {/* Documents */}
+            <Section icon={FileText} title="Verified Documents">
+              <div className="flex flex-wrap gap-2">
+                <DocumentBadge label="Passport" url={passport?.passport_file_url || null} />
+                {passport?.national_id_file_url && <DocumentBadge label="National ID" url={passport.national_id_file_url} />}
+                {passport?.emirates_id_file_url && <DocumentBadge label="Emirates ID" url={passport.emirates_id_file_url} />}
+                {passport?.iqama_file_url && <DocumentBadge label="Iqama" url={passport.iqama_file_url} />}
+                {passport?.residency_permit_file_url && <DocumentBadge label="Residency Visa" url={passport.residency_permit_file_url} />}
+                {passport?.cnie_file_url && <DocumentBadge label="CNIE" url={passport.cnie_file_url} />}
+                {passport?.address_proof_file_url && <DocumentBadge label="Address Proof" url={passport.address_proof_file_url} />}
+              </div>
+            </Section>
+
+            {/* Banking */}
+            <Section icon={CreditCard} title="Banking Information">
+              <div className="space-y-0">
+                <InfoRow label="Bank Country" value={getCountryName(passport?.bank_account_country)} />
+                <InfoRow 
+                  label="Account Number" 
+                  value={passport?.bank_account_number ? `••••${passport.bank_account_number.slice(-4)}` : null} 
+                />
+                <InfoRow label="SWIFT/BIC" value={passport?.swift_code} />
+              </div>
+            </Section>
+
+            {/* Tax */}
+            <Section icon={Building2} title="Tax Information">
+              <div className="space-y-0">
+                <InfoRow label="Tax ID" value={passport?.tax_id} />
+                {passport?.nin && <InfoRow label="NIN" value={passport.nin} />}
+                {passport?.bvn && <InfoRow label="BVN" value={passport.bvn} />}
+                {passport?.national_number && <InfoRow label="National Number" value={passport.national_number} />}
+              </div>
+            </Section>
+
+            {/* Address */}
+            <Section icon={MapPin} title="Address">
+              <p className="text-sm text-foreground leading-relaxed">
+                {passport?.address || "Not provided"}
+              </p>
+            </Section>
+
+            {/* Signature */}
+            {passport?.signature_file_url && (
+              <div className="py-5 sm:py-6">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <FileText className="h-4 w-4 text-primary" />
+                  </div>
+                  <h2 className="font-semibold text-[15px]">Signature</h2>
+                </div>
+                <div className="ml-0 sm:ml-10 p-4 bg-muted/50 rounded-xl border border-border">
+                  <img 
+                    src={passport.signature_file_url} 
+                    alt="Signature" 
+                    className="h-12 sm:h-16 object-contain"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 sm:px-8 py-5 bg-muted/30 border-t border-border">
+            <p className="text-xs text-muted-foreground text-center leading-relaxed">
+              This passport is structured for global employment compliance.
+              <br />
+              Generated on {new Date(passport?.created_at || "").toLocaleDateString("en-US", { 
+                year: "numeric", 
+                month: "long", 
+                day: "numeric" 
+              })}
+            </p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="mt-6 sm:mt-8 space-y-4">
+          <Button
+            onClick={handleDownloadPDF}
+            variant="apple-blue"
+            size="lg"
+            className="w-full"
+            disabled={downloading}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            {downloading ? "Generating PDF..." : "Download Passport PDF"}
+          </Button>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Button
+              onClick={() => handleExport("Deel")}
+              variant="apple-outline"
+              size="default"
+              className="w-full text-sm"
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Export to Deel
+            </Button>
+            <Button
+              onClick={() => handleExport("Remote")}
+              variant="apple-outline"
+              size="default"
+              className="w-full text-sm"
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Export to Remote
+            </Button>
+            <Button
+              onClick={() => handleExport("Oyster")}
+              variant="apple-outline"
+              size="default"
+              className="w-full text-sm"
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Export to Oyster
+            </Button>
           </div>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Check, X, Upload } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 
 interface DocumentUploadProps {
   label: string;
@@ -50,40 +49,22 @@ const DocumentUpload = ({
     // Create mock URL
     const mockUrl = `mock://documents/${userId}/${field}-${Date.now()}-${file.name}`;
 
-    try {
-      await supabase
-        .from("employee_profiles")
-        .update({ [field]: mockUrl })
-        .eq("user_id", userId);
+    // Only update local state - let parent handle DB save
+    onUploadComplete(field, mockUrl);
+    setShowSuccess(true);
 
-      onUploadComplete(field, mockUrl);
-      setShowSuccess(true);
-
-      setTimeout(() => {
-        setShowSuccess(false);
-        setIsUploading(false);
-        setProgress(0);
-      }, 1200);
-    } catch (error) {
-      console.error("Upload error:", error);
+    setTimeout(() => {
+      setShowSuccess(false);
       setIsUploading(false);
       setProgress(0);
-    }
+    }, 1200);
 
     // Reset input
     e.target.value = "";
   };
 
-  const handleClear = async () => {
-    try {
-      await supabase
-        .from("employee_profiles")
-        .update({ [field]: null })
-        .eq("user_id", userId);
-      onUploadComplete(field, null);
-    } catch (error) {
-      console.error("Clear error:", error);
-    }
+  const handleClear = () => {
+    onUploadComplete(field, null);
   };
 
   const inputId = `file-input-${field}`;
