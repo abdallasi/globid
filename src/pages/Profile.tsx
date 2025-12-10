@@ -21,6 +21,7 @@ const COUNTRIES = [
   { code: "MA", name: "Morocco" },
   { code: "JO", name: "Jordan" },
   { code: "TN", name: "Tunisia" },
+  { code: "TR", name: "Turkey" },
   { code: "NG", name: "Nigeria" },
   { code: "IN", name: "India" },
   { code: "KE", name: "Kenya" },
@@ -32,6 +33,13 @@ const COUNTRIES = [
   { code: "GH", name: "Ghana" },
   { code: "CA", name: "Canada" },
 ];
+
+// Haptic feedback helper
+const triggerHaptic = (pattern: number | number[] = 10) => {
+  if (navigator.vibrate) {
+    navigator.vibrate(pattern);
+  }
+};
 
 const VISA_STATUSES = [
   { value: "citizen", label: "Citizen" },
@@ -115,6 +123,7 @@ const Profile = () => {
   };
 
   const handleChange = (field: string, value: string) => {
+    triggerHaptic(5);
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -188,7 +197,11 @@ const Profile = () => {
   };
 
   const handleDocUpload = (field: string, url: string | null) => {
-    setProfile(prev => ({ ...prev, [field]: url }));
+    triggerHaptic(15);
+    setProfile(prev => {
+      const updated = { ...prev, [field]: url };
+      return updated;
+    });
   };
 
   // Signature-only upload (this one works)
@@ -201,6 +214,7 @@ const Profile = () => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
+    triggerHaptic(10);
     setSignatureUploading(true);
     setSignatureProgress(0);
 
@@ -222,6 +236,7 @@ const Profile = () => {
 
       setProfile(prev => ({ ...prev, signature_file_url: mockUrl }));
       setSignatureSuccess(true);
+      triggerHaptic([10, 50, 20]); // Success haptic pattern
 
       setTimeout(() => {
         setSignatureSuccess(false);
@@ -395,7 +410,10 @@ const Profile = () => {
             </div>
 
             <Button 
-              onClick={() => handleSave()}
+              onClick={() => {
+                triggerHaptic(20);
+                handleSave();
+              }}
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -420,7 +438,10 @@ const Profile = () => {
             </div>
 
             <Button 
-              onClick={() => handleSave()}
+              onClick={() => {
+                triggerHaptic(20);
+                handleSave();
+              }}
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -470,7 +491,7 @@ const Profile = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="swift_code" className="flex items-center gap-2">
-                  SWIFT/BIC Code
+                  SWIFT/BIC Code or Bank Name
                   <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
                 </Label>
                 <Input
@@ -478,7 +499,7 @@ const Profile = () => {
                   value={profile.swift_code || ""}
                   onChange={(e) => handleChange("swift_code", e.target.value)}
                   className="apple-input"
-                  placeholder="Enter SWIFT code"
+                  placeholder="Enter SWIFT/BIC code or bank name"
                 />
               </div>
 
@@ -511,7 +532,10 @@ const Profile = () => {
             </div>
 
             <Button 
-              onClick={() => handleSave()}
+              onClick={() => {
+                triggerHaptic(20);
+                handleSave();
+              }}
               variant="apple-blue" 
               size="lg" 
               className="w-full"
@@ -578,7 +602,10 @@ const Profile = () => {
             </div>
 
             <Button 
-              onClick={() => handleSave(true)} 
+              onClick={() => {
+                triggerHaptic(20);
+                handleSave(true);
+              }} 
               variant="apple-blue" 
               size="lg" 
               className="w-full"

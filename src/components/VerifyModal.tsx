@@ -6,6 +6,13 @@ interface VerifyModalProps {
   status: string;
 }
 
+// Haptic feedback helper
+const triggerHaptic = (pattern: number | number[] = 10) => {
+  if (navigator.vibrate) {
+    navigator.vibrate(pattern);
+  }
+};
+
 const VerifyModal = ({ isOpen, status }: VerifyModalProps) => {
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -29,6 +36,7 @@ const VerifyModal = ({ isOpen, status }: VerifyModalProps) => {
       return () => clearInterval(interval);
     } else if (isVerified) {
       setProgress(100);
+      triggerHaptic([10, 30, 20, 50]); // Success haptic pattern
     }
   }, [isOpen, isVerified]);
 
