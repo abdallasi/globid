@@ -168,87 +168,58 @@ const Profile = () => {
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [uploadSuccess, setUploadSuccess] = useState<Record<string, boolean>>({});
 
-  const handleFileUploadWithProgress = async (field: keyof ProfileData, file: File) => {
-    if (!user) {
-      console.log("No user found, aborting upload");
-      return;
-    }
-    
-    console.log("Starting upload for field:", field, "file:", file.name);
+  const handleMockUpload = async (field: keyof ProfileData, file: File) => {
+    if (!user) return;
     
     setUploading(field);
     setUploadProgress(prev => ({ ...prev, [field]: 0 }));
     setUploadSuccess(prev => ({ ...prev, [field]: false }));
     
-    // Simulate progress
+    // Smooth progress animation
+    let progress = 0;
     const progressInterval = setInterval(() => {
-      setUploadProgress(prev => {
-        const current = prev[field] || 0;
-        if (current >= 90) {
-          clearInterval(progressInterval);
-          return prev;
-        }
-        return { ...prev, [field]: current + 10 };
-      });
-    }, 100);
+      progress += Math.random() * 15 + 5;
+      if (progress >= 95) {
+        progress = 95;
+        clearInterval(progressInterval);
+      }
+      setUploadProgress(prev => ({ ...prev, [field]: Math.min(progress, 95) }));
+    }, 150);
+    
+    // Simulate upload delay (1-2 seconds)
+    await new Promise(resolve => setTimeout(resolve, 1200 + Math.random() * 800));
+    
+    clearInterval(progressInterval);
+    setUploadProgress(prev => ({ ...prev, [field]: 100 }));
+    
+    // Generate mock URL with file name
+    const mockUrl = `mock://documents/${user.id}/${field}-${Date.now()}-${file.name}`;
     
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${String(field)}-${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-
-      console.log("Uploading to path:", filePath);
-
-      const existingUrl = profile[field] as string;
-      if (existingUrl) {
-        const existingPath = existingUrl.split('/').slice(-2).join('/');
-        console.log("Removing existing file:", existingPath);
-        await supabase.storage.from("documents").remove([existingPath]);
-      }
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("documents")
-        .upload(filePath, file, { upsert: true });
-
-      console.log("Upload result:", { uploadData, uploadError });
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from("documents")
-        .getPublicUrl(filePath);
-
-      console.log("Public URL:", publicUrl);
-
-      const updateData = { [field]: publicUrl };
-      const { data: updateResult, error: updateError } = await supabase
+      // Save mock URL to database so profile can be completed
+      const { error } = await supabase
         .from("employee_profiles")
-        .update(updateData)
-        .eq("user_id", user.id)
-        .select();
+        .update({ [field]: mockUrl })
+        .eq("user_id", user.id);
 
-      console.log("Update result:", { updateResult, updateError });
+      if (error) throw error;
 
-      if (updateError) throw updateError;
-
-      clearInterval(progressInterval);
-      setUploadProgress(prev => ({ ...prev, [field]: 100 }));
-      setProfile(prev => ({ ...prev, [field]: publicUrl }));
+      setProfile(prev => ({ ...prev, [field]: mockUrl }));
       setUploadSuccess(prev => ({ ...prev, [field]: true }));
       
       setTimeout(() => {
         setUploadSuccess(prev => ({ ...prev, [field]: false }));
-      }, 2000);
+        setUploading(null);
+        setUploadProgress(prev => ({ ...prev, [field]: 0 }));
+      }, 1500);
       
     } catch (error) {
-      console.error("Upload error for field", field, ":", error);
-      clearInterval(progressInterval);
+      console.error("Save error:", error);
       toast({
-        title: "Upload failed",
-        description: error instanceof Error ? error.message : "Please try again.",
+        title: "Error",
+        description: "Failed to save. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setUploading(null);
       setUploadProgress(prev => ({ ...prev, [field]: 0 }));
     }
@@ -273,9 +244,8 @@ const Profile = () => {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      console.log("File selected:", file?.name, "for field:", field);
       if (file) {
-        handleFileUploadWithProgress(field, file);
+        handleMockUpload(field, file);
       }
       // Reset input to allow re-upload of same file
       if (inputRef.current) {
@@ -284,9 +254,20 @@ const Profile = () => {
     };
 
     const triggerFileSelect = () => {
-      console.log("Triggering file select for:", field);
       if (inputRef.current && !isUploading) {
         inputRef.current.click();
+      }
+    };
+
+    const handleClear = async () => {
+      setProfile(prev => ({ ...prev, [field]: null }));
+      try {
+        await supabase
+          .from("employee_profiles")
+          .update({ [field]: null })
+          .eq("user_id", user?.id);
+      } catch (error) {
+        console.error("Clear error:", error);
       }
     };
     
@@ -312,13 +293,13 @@ const Profile = () => {
               <span className="text-sm text-success font-medium">Uploaded ✓</span>
             </div>
           ) : value ? (
-            <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl">
+            <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl animate-fade-in">
               <Check className="h-4 w-4 text-success" />
               <span className="text-sm flex-1 truncate text-foreground">Document uploaded</span>
               <button
                 type="button"
-                onClick={() => handleChange(field, "")}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                onClick={handleClear}
+                className="p-1 text-muted-foreground hover:text-destructive transition-colors rounded-full hover:bg-destructive/10"
               >
                 <X className="h-4 w-4" />
               </button>
