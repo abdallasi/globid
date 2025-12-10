@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
 import { ArrowLeft, Check, Shield, Globe, FileText, Loader2 } from "lucide-react";
+import PaymentMethodModal from "@/components/PaymentMethodModal";
 
 declare global {
   interface Window {
@@ -28,6 +29,7 @@ const Payment = () => {
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [showMethodModal, setShowMethodModal] = useState(false);
 
   useEffect(() => {
     // Load Paystack inline script
@@ -180,7 +182,7 @@ const Payment = () => {
             </div>
 
             <Button
-              onClick={handlePayment}
+              onClick={() => setShowMethodModal(true)}
               size="lg"
               className="w-full"
               disabled={loading || !scriptLoaded}
@@ -190,12 +192,18 @@ const Payment = () => {
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Processing...
                 </span>
-              ) : "Pay with Paystack"}
+              ) : "Pay"}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
-              Secure payment powered by Paystack
+              Secure payment processing
             </p>
+            
+            <PaymentMethodModal
+              open={showMethodModal}
+              onClose={() => setShowMethodModal(false)}
+              onSelectPaystack={handlePayment}
+            />
           </div>
 
           {/* Trust Badges */}

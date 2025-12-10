@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -265,6 +265,7 @@ const Profile = () => {
     accept?: string;
     optional?: boolean;
   }) => {
+    const inputRef = useRef<HTMLInputElement>(null);
     const value = profile[field];
     const isUploading = uploading === field;
     const progress = uploadProgress[field] || 0;
@@ -272,11 +273,21 @@ const Profile = () => {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
+      console.log("File selected:", file?.name, "for field:", field);
       if (file) {
         handleFileUploadWithProgress(field, file);
       }
       // Reset input to allow re-upload of same file
-      e.target.value = '';
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+    };
+
+    const triggerFileSelect = () => {
+      console.log("Triggering file select for:", field);
+      if (inputRef.current && !isUploading) {
+        inputRef.current.click();
+      }
     };
     
     return (
@@ -287,10 +298,11 @@ const Profile = () => {
         </Label>
         <div className="relative">
           <input
-            id={`file-input-${field}`}
+            ref={inputRef}
             type="file"
             accept={accept}
-            className="sr-only"
+            className="absolute opacity-0 w-0 h-0 overflow-hidden"
+            style={{ position: 'absolute', left: '-9999px' }}
             onChange={handleFileChange}
             disabled={isUploading}
           />
@@ -312,10 +324,12 @@ const Profile = () => {
               </button>
             </div>
           ) : (
-            <label 
-              htmlFor={`file-input-${field}`}
-              className={`flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
-                isUploading ? 'pointer-events-none' : 'hover:bg-secondary/50 hover:border-primary/30 cursor-pointer'
+            <button 
+              type="button"
+              onClick={triggerFileSelect}
+              disabled={isUploading}
+              className={`w-full flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
+                isUploading ? 'pointer-events-none' : 'hover:bg-secondary/50 hover:border-primary/30 cursor-pointer active:bg-secondary/60'
               }`}
             >
               {isUploading ? (
@@ -337,7 +351,7 @@ const Profile = () => {
                   <span className="text-sm text-muted-foreground">Upload document</span>
                 </>
               )}
-            </label>
+            </button>
           )}
         </div>
       </div>
