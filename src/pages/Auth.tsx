@@ -19,7 +19,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const [mode, setMode] = useState<"signin" | "signup">(
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">(
     searchParams.get("mode") === "signup" ? "signup" : "signin"
   );
   const [email, setEmail] = useState("");
@@ -28,6 +28,7 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [resetSent, setResetSent] = useState(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -65,6 +66,40 @@ const Auth = () => {
         setErrors(newErrors);
       }
       return false;
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !z.string().email().safeParse(email).success) {
+      setErrors({ email: "Please enter a valid email address" });
+      return;
+    }
+    
+    setLoading(true);
+    setErrors({});
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth?mode=signin`,
+      });
+
+      if (error) throw error;
+
+      setResetSent(true);
+      toast({
+        title: "Reset link sent",
+        description: "Check your email for a password reset link.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send reset link. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,101 +175,184 @@ const Auth = () => {
       {/* Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {mode === "signup" ? "Create your passport" : "Welcome back"}
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              {mode === "signup" 
-                ? "Start your global employment journey" 
-                : "Sign in to continue"
-              }
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {mode === "signup" && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="John Doe"
-                  className="apple-input"
-                  disabled={loading}
-                />
-                {errors.fullName && (
-                  <p className="text-sm text-destructive">{errors.fullName}</p>
-                )}
+          {mode === "forgot" ? (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                  Reset password
+                </h1>
+                <p className="text-muted-foreground mt-2">
+                  {resetSent 
+                    ? "Check your email for a reset link" 
+                    : "Enter your email to receive a reset link"
+                  }
+                </p>
               </div>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="apple-input"
-                disabled={loading}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
+              {!resetSent ? (
+                <form onSubmit={handleForgotPassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="apple-input"
+                      disabled={loading}
+                    />
+                    {errors.email && (
+                      <p className="text-sm text-destructive">{errors.email}</p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="apple-blue"
+                    size="lg"
+                    className="w-full mt-6"
+                    disabled={loading}
+                  >
+                    {loading ? "Sending..." : "Send Reset Link"}
+                  </Button>
+                </form>
+              ) : (
+                <Button
+                  variant="apple-blue"
+                  size="lg"
+                  className="w-full"
+                  onClick={() => {
+                    setMode("signin");
+                    setResetSent(false);
+                  }}
+                >
+                  Back to Sign In
+                </Button>
               )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="apple-input pr-10"
+              {!resetSent && (
+                <div className="mt-6 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setMode("signin")}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Back to sign in
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                  {mode === "signup" ? "Create your passport" : "Welcome back"}
+                </h1>
+                <p className="text-muted-foreground mt-2">
+                  {mode === "signup" 
+                    ? "Start your global employment journey" 
+                    : "Sign in to continue"
+                  }
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {mode === "signup" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">Full Name</Label>
+                    <Input
+                      id="fullName"
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="John Doe"
+                      className="apple-input"
+                      disabled={loading}
+                    />
+                    {errors.fullName && (
+                      <p className="text-sm text-destructive">{errors.fullName}</p>
+                    )}
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="apple-input"
+                    disabled={loading}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Password</Label>
+                    {mode === "signin" && (
+                      <button
+                        type="button"
+                        onClick={() => setMode("forgot")}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Forgot password?
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="apple-input pr-10"
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  variant="apple-blue"
+                  size="lg"
+                  className="w-full mt-6"
                   disabled={loading}
-                />
+                >
+                  {loading ? "Please wait..." : mode === "signup" ? "Create Account" : "Sign In"}
+                </Button>
+              </form>
+
+              <div className="mt-6 text-center">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {mode === "signup" 
+                    ? "Already have an account? Sign in" 
+                    : "Don't have an account? Create one"
+                  }
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
-              )}
-            </div>
-
-            <Button
-              type="submit"
-              variant="apple-blue"
-              size="lg"
-              className="w-full mt-6"
-              disabled={loading}
-            >
-              {loading ? "Please wait..." : mode === "signup" ? "Create Account" : "Sign In"}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {mode === "signup" 
-                ? "Already have an account? Sign in" 
-                : "Don't have an account? Create one"
-              }
-            </button>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
