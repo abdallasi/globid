@@ -187,4 +187,40 @@
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
+  
+  /* Verification pop animation */
+  .animate-verify-pop {
+    animation: verifyPop 120ms ease-out forwards;
+  }
+  
+  @keyframes verifyPop {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    70% {
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Verification pulse glow */
+  .verify-pulse {
+    animation: verifyPulse 400ms ease-out forwards;
+  }
+  
+  @keyframes verifyPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 208, 111, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(0, 208, 111, 0.2);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 208, 111, 0);
+    }
+  }
 }
