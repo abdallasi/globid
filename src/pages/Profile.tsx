@@ -286,6 +286,14 @@ const Profile = () => {
           {optional && <span className="text-xs text-muted-foreground font-normal">(Optional)</span>}
         </Label>
         <div className="relative">
+          <input
+            id={`file-input-${field}`}
+            type="file"
+            accept={accept}
+            className="sr-only"
+            onChange={handleFileChange}
+            disabled={isUploading}
+          />
           {showSuccess ? (
             <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl animate-fade-in">
               <Check className="h-4 w-4 text-success" />
@@ -304,24 +312,12 @@ const Profile = () => {
               </button>
             </div>
           ) : (
-            <div 
+            <label 
+              htmlFor={`file-input-${field}`}
               className={`flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
-                isUploading ? '' : 'hover:bg-secondary/50 hover:border-primary/30 cursor-pointer'
+                isUploading ? 'pointer-events-none' : 'hover:bg-secondary/50 hover:border-primary/30 cursor-pointer'
               }`}
-              onClick={() => {
-                if (!isUploading) {
-                  document.getElementById(`file-input-${field}`)?.click();
-                }
-              }}
             >
-              <input
-                id={`file-input-${field}`}
-                type="file"
-                accept={accept}
-                className="hidden"
-                onChange={handleFileChange}
-                disabled={isUploading}
-              />
               {isUploading ? (
                 <div className="w-full space-y-3">
                   <div className="flex items-center justify-center gap-2">
@@ -341,7 +337,7 @@ const Profile = () => {
                   <span className="text-sm text-muted-foreground">Upload document</span>
                 </>
               )}
-            </div>
+            </label>
           )}
         </div>
       </div>
