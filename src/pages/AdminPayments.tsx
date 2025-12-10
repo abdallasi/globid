@@ -37,11 +37,14 @@ const AdminPayments = () => {
         return;
       }
 
-      // Check if user is admin using secure server-side function
-      const { data: hasAdminRole } = await supabase
-        .rpc("has_role", { _user_id: user.id, _role: "admin" });
+      // Check if user is admin
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
 
-      if (!hasAdminRole) {
+      if (profile?.role !== "admin") {
         navigate("/dashboard");
         return;
       }

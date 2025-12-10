@@ -12,51 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    // Extract and validate JWT token
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.error("Missing or invalid authorization header");
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 401,
-      });
-    }
-
-    const token = authHeader.replace("Bearer ", "");
-    
-    // Initialize Supabase client with anon key for JWT validation
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    
-    // Create client with user's JWT to validate and get user
-    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: `Bearer ${token}` } }
-    });
-    
-    // Get the authenticated user from the JWT
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
-    
-    if (authError || !user) {
-      console.error("Auth error:", authError);
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 401,
-      });
-    }
-
-    // Use the authenticated user's ID, NOT the one from request body
-    const authenticatedUserId = user.id;
-    console.log("Authenticated user:", authenticatedUserId);
-
-    const { reference } = await req.json();
-    
-    if (!reference) {
-      return new Response(JSON.stringify({ error: "Missing payment reference" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      });
-    }
+    const { reference, userId } = await req.json();
 
     const paystackSecretKey = Deno.env.get("PAYSTACK_SECRET_KEY");
     if (!paystackSecretKey) {
@@ -64,8 +20,7 @@ serve(async (req) => {
     }
 
     // Verify transaction with Paystack
-    console.log("Verifying Paystack transaction:", reference);
-    const response = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
+    const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${paystackSecretKey}`,
@@ -73,7 +28,6 @@ serve(async (req) => {
     });
 
     const data = await response.json();
-    console.log("Paystack response status:", data.status, "transaction status:", data.data?.status);
 
     if (!data.status || data.data.status !== "success") {
       return new Response(JSON.stringify({ success: false, message: "Payment not verified" }), {
@@ -82,20 +36,19 @@ serve(async (req) => {
       });
     }
 
-    // Update payment status using service role (to bypass RLS)
+    // Update payment status in database
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { error } = await supabase
       .from("employee_profiles")
       .update({ payment_status: "paid" })
-      .eq("user_id", authenticatedUserId);
+      .eq("user_id", userId);
 
     if (error) {
-      console.error("Database update error:", error);
       throw error;
     }
-
-    console.log("Payment verified and status updated for user:", authenticatedUserId);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
