@@ -29,7 +29,7 @@ const Verify = () => {
         }
 
         const { data, error } = await supabase.functions.invoke("verify-paystack-payment", {
-          body: { reference, userId: user.id },
+          body: { reference },
         });
 
         if (error) throw error;
