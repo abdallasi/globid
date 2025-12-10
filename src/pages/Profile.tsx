@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { User } from "@supabase/supabase-js";
 import { ArrowLeft, Upload, Check, X } from "lucide-react";
 import CompletionModal from "@/components/CompletionModal";
+import DocumentUpload from "@/components/DocumentUpload";
 
 const COUNTRIES = [
   { code: "AE", name: "United Arab Emirates" },
@@ -72,7 +73,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<Partial<ProfileData>>({});
-  const [uploading, setUploading] = useState<string | null>(null);
+  
   const [showCompletion, setShowCompletion] = useState(false);
 
   useEffect(() => {
@@ -165,188 +166,73 @@ const Profile = () => {
     }
   };
 
-  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
-  const [uploadSuccess, setUploadSuccess] = useState<Record<string, boolean>>({});
-
-  const handleMockUpload = async (field: keyof ProfileData, file: File) => {
-    if (!user) return;
-    
-    setUploading(field);
-    setUploadProgress(prev => ({ ...prev, [field]: 0 }));
-    setUploadSuccess(prev => ({ ...prev, [field]: false }));
-    
-    // Smooth progress animation
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-      progress += Math.random() * 15 + 5;
-      if (progress >= 95) {
-        progress = 95;
-        clearInterval(progressInterval);
-      }
-      setUploadProgress(prev => ({ ...prev, [field]: Math.min(progress, 95) }));
-    }, 150);
-    
-    // Simulate upload delay (1-2 seconds)
-    await new Promise(resolve => setTimeout(resolve, 1200 + Math.random() * 800));
-    
-    clearInterval(progressInterval);
-    setUploadProgress(prev => ({ ...prev, [field]: 100 }));
-    
-    // Generate mock URL with file name
-    const mockUrl = `mock://documents/${user.id}/${field}-${Date.now()}-${file.name}`;
-    
-    try {
-      // Save mock URL to database so profile can be completed
-      const { error } = await supabase
-        .from("employee_profiles")
-        .update({ [field]: mockUrl })
-        .eq("user_id", user.id);
-
-      if (error) throw error;
-
-      setProfile(prev => ({ ...prev, [field]: mockUrl }));
-      setUploadSuccess(prev => ({ ...prev, [field]: true }));
-      
-      setTimeout(() => {
-        setUploadSuccess(prev => ({ ...prev, [field]: false }));
-        setUploading(null);
-        setUploadProgress(prev => ({ ...prev, [field]: 0 }));
-      }, 1500);
-      
-    } catch (error) {
-      console.error("Save error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to save. Please try again.",
-        variant: "destructive",
-      });
-      setUploading(null);
-      setUploadProgress(prev => ({ ...prev, [field]: 0 }));
-    }
+  const handleDocUpload = (field: string, url: string | null) => {
+    setProfile(prev => ({ ...prev, [field]: url }));
   };
 
-  const FileUploadField = ({ 
-    label, 
-    field, 
-    accept = ".pdf,.jpg,.jpeg,.png",
-    optional = false
-  }: { 
-    label: string; 
-    field: keyof ProfileData; 
-    accept?: string;
-    optional?: boolean;
-  }) => {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const value = profile[field];
-    const isUploading = uploading === field;
-    const progress = uploadProgress[field] || 0;
-    const showSuccess = uploadSuccess[field];
+  // Signature-only upload (this one works)
+  const [signatureUploading, setSignatureUploading] = useState(false);
+  const [signatureProgress, setSignatureProgress] = useState(0);
+  const [signatureSuccess, setSignatureSuccess] = useState(false);
+  const signatureRef = useRef<HTMLInputElement>(null);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        handleMockUpload(field, file);
-      }
-      // Reset input to allow re-upload of same file
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
-    };
+  const handleSignatureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
 
-    const triggerFileSelect = () => {
-      if (inputRef.current && !isUploading) {
-        inputRef.current.click();
-      }
-    };
+    setSignatureUploading(true);
+    setSignatureProgress(0);
 
-    const handleClear = async () => {
-      setProfile(prev => ({ ...prev, [field]: null }));
-      try {
-        await supabase
-          .from("employee_profiles")
-          .update({ [field]: null })
-          .eq("user_id", user?.id);
-      } catch (error) {
-        console.error("Clear error:", error);
-      }
-    };
-    
-    return (
-      <div className="space-y-2">
-        <Label className="flex items-center gap-2">
-          {label}
-          {optional && <span className="text-xs text-muted-foreground font-normal">(Optional)</span>}
-        </Label>
-        <div className="relative">
-          <input
-            ref={inputRef}
-            type="file"
-            accept={accept}
-            className="absolute opacity-0 w-0 h-0 overflow-hidden"
-            style={{ position: 'absolute', left: '-9999px' }}
-            onChange={handleFileChange}
-            disabled={isUploading}
-          />
-          {showSuccess ? (
-            <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl animate-fade-in">
-              <Check className="h-4 w-4 text-success" />
-              <span className="text-sm text-success font-medium">Uploaded ✓</span>
-            </div>
-          ) : value ? (
-            <div className="flex items-center gap-2 p-4 bg-success/5 border border-success/20 rounded-xl animate-fade-in">
-              <Check className="h-4 w-4 text-success" />
-              <span className="text-sm flex-1 truncate text-foreground">Document uploaded</span>
-              <button
-                type="button"
-                onClick={handleClear}
-                className="p-1 text-muted-foreground hover:text-destructive transition-colors rounded-full hover:bg-destructive/10"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          ) : (
-            <button 
-              type="button"
-              onClick={triggerFileSelect}
-              disabled={isUploading}
-              className={`w-full flex flex-col items-center justify-center gap-2 p-6 border border-border bg-secondary/30 rounded-xl transition-all duration-200 ${
-                isUploading ? 'pointer-events-none' : 'hover:bg-secondary/50 hover:border-primary/30 cursor-pointer active:bg-secondary/60'
-              }`}
-            >
-              {isUploading ? (
-                <div className="w-full space-y-3">
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    <span className="text-sm text-muted-foreground">Uploading...</span>
-                  </div>
-                  <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <Upload className="h-5 w-5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Upload document</span>
-                </>
-              )}
-            </button>
-          )}
-        </div>
-      </div>
-    );
+    const interval = setInterval(() => {
+      setSignatureProgress(p => (p >= 95 ? 95 : p + Math.random() * 20 + 10));
+    }, 100);
+
+    await new Promise(r => setTimeout(r, 1000 + Math.random() * 500));
+    clearInterval(interval);
+    setSignatureProgress(100);
+
+    const mockUrl = `mock://documents/${user.id}/signature-${Date.now()}-${file.name}`;
+
+    try {
+      await supabase
+        .from("employee_profiles")
+        .update({ signature_file_url: mockUrl })
+        .eq("user_id", user.id);
+
+      setProfile(prev => ({ ...prev, signature_file_url: mockUrl }));
+      setSignatureSuccess(true);
+
+      setTimeout(() => {
+        setSignatureSuccess(false);
+        setSignatureUploading(false);
+        setSignatureProgress(0);
+      }, 1200);
+    } catch (error) {
+      console.error("Signature upload error:", error);
+      setSignatureUploading(false);
+      setSignatureProgress(0);
+    }
+
+    if (signatureRef.current) signatureRef.current.value = "";
+  };
+
+  const clearSignature = async () => {
+    setProfile(prev => ({ ...prev, signature_file_url: null }));
+    await supabase
+      .from("employee_profiles")
+      .update({ signature_file_url: null })
+      .eq("user_id", user?.id);
   };
 
   const renderCountrySpecificFields = () => {
     const country = profile.residence_country;
+    if (!user) return null;
     
     if (country === "AE") {
       return (
         <>
-          <FileUploadField label="Emirates ID" field="emirates_id_file_url" />
-          <FileUploadField label="Residency Visa" field="residency_permit_file_url" />
+          <DocumentUpload label="Emirates ID" field="emirates_id_file_url" value={profile.emirates_id_file_url} userId={user.id} onUploadComplete={handleDocUpload} />
+          <DocumentUpload label="Residency Visa" field="residency_permit_file_url" value={profile.residency_permit_file_url} userId={user.id} onUploadComplete={handleDocUpload} />
         </>
       );
     }
@@ -354,8 +240,8 @@ const Profile = () => {
     if (country === "SA") {
       return (
         <>
-          <FileUploadField label="Iqama" field="iqama_file_url" />
-          <FileUploadField label="National ID" field="national_id_file_url" />
+          <DocumentUpload label="Iqama" field="iqama_file_url" value={profile.iqama_file_url} userId={user.id} onUploadComplete={handleDocUpload} />
+          <DocumentUpload label="National ID" field="national_id_file_url" value={profile.national_id_file_url} userId={user.id} onUploadComplete={handleDocUpload} />
         </>
       );
     }
@@ -363,38 +249,24 @@ const Profile = () => {
     if (country === "EG") {
       return (
         <>
-          <FileUploadField label="National ID" field="national_id_file_url" />
+          <DocumentUpload label="National ID" field="national_id_file_url" value={profile.national_id_file_url} userId={user.id} onUploadComplete={handleDocUpload} />
           <div className="space-y-2">
             <Label htmlFor="tax_id">Tax Number</Label>
-            <Input
-              id="tax_id"
-              value={profile.tax_id || ""}
-              onChange={(e) => handleChange("tax_id", e.target.value)}
-              className="apple-input"
-              placeholder="Enter tax number"
-            />
+            <Input id="tax_id" value={profile.tax_id || ""} onChange={(e) => handleChange("tax_id", e.target.value)} className="apple-input" placeholder="Enter tax number" />
           </div>
         </>
       );
     }
     
     if (country === "MA") {
-      return (
-        <FileUploadField label="CNIE (National ID)" field="cnie_file_url" />
-      );
+      return <DocumentUpload label="CNIE (National ID)" field="cnie_file_url" value={profile.cnie_file_url} userId={user.id} onUploadComplete={handleDocUpload} />;
     }
     
     if (country === "JO") {
       return (
         <div className="space-y-2">
           <Label htmlFor="national_number">National Number</Label>
-          <Input
-            id="national_number"
-            value={profile.national_number || ""}
-            onChange={(e) => handleChange("national_number", e.target.value)}
-            className="apple-input"
-            placeholder="Enter national number"
-          />
+          <Input id="national_number" value={profile.national_number || ""} onChange={(e) => handleChange("national_number", e.target.value)} className="apple-input" placeholder="Enter national number" />
         </div>
       );
     }
@@ -404,31 +276,17 @@ const Profile = () => {
         <>
           <div className="space-y-2">
             <Label htmlFor="nin">NIN (National Identification Number)</Label>
-            <Input
-              id="nin"
-              value={profile.nin || ""}
-              onChange={(e) => handleChange("nin", e.target.value)}
-              className="apple-input"
-              placeholder="Enter NIN"
-            />
+            <Input id="nin" value={profile.nin || ""} onChange={(e) => handleChange("nin", e.target.value)} className="apple-input" placeholder="Enter NIN" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="bvn">BVN (Bank Verification Number) - Optional</Label>
-            <Input
-              id="bvn"
-              value={profile.bvn || ""}
-              onChange={(e) => handleChange("bvn", e.target.value)}
-              className="apple-input"
-              placeholder="Enter BVN"
-            />
+            <Input id="bvn" value={profile.bvn || ""} onChange={(e) => handleChange("bvn", e.target.value)} className="apple-input" placeholder="Enter BVN" />
           </div>
         </>
       );
     }
     
-    return (
-      <FileUploadField label="National ID" field="national_id_file_url" />
-    );
+    return <DocumentUpload label="National ID" field="national_id_file_url" value={profile.national_id_file_url} userId={user.id} onUploadComplete={handleDocUpload} />;
   };
 
   if (loading) {
@@ -536,7 +394,7 @@ const Profile = () => {
             </div>
 
             <div className="space-y-4">
-              <FileUploadField label="Passport Photo" field="passport_file_url" />
+              {user && <DocumentUpload label="Passport Photo" field="passport_file_url" value={profile.passport_file_url} userId={user.id} onUploadComplete={handleDocUpload} />}
               {renderCountrySpecificFields()}
             </div>
 
@@ -628,7 +486,7 @@ const Profile = () => {
                 />
               </div>
 
-              <FileUploadField label="Proof of Address" field="address_proof_file_url" optional={true} />
+              {user && <DocumentUpload label="Proof of Address" field="address_proof_file_url" value={profile.address_proof_file_url} userId={user.id} onUploadComplete={handleDocUpload} optional />}
             </div>
 
             <Button 
@@ -652,11 +510,47 @@ const Profile = () => {
             </div>
 
             <div className="space-y-4">
-              <FileUploadField 
-                label="Signature" 
-                field="signature_file_url" 
-                accept=".png,.jpg,.jpeg"
-              />
+              <div className="space-y-2">
+                <Label>Signature</Label>
+                {signatureSuccess ? (
+                  <div className="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-xl animate-fade-in">
+                    <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <Check className="h-3 w-3 text-white" />
+                    </div>
+                    <span className="text-sm text-emerald-700 dark:text-emerald-400 font-medium">Uploaded successfully</span>
+                  </div>
+                ) : profile.signature_file_url ? (
+                  <div className="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
+                    <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <Check className="h-3 w-3 text-white" />
+                    </div>
+                    <span className="text-sm flex-1 text-foreground">Signature uploaded</span>
+                    <button type="button" onClick={clearSignature} className="p-1.5 text-muted-foreground hover:text-red-500 transition-colors rounded-full hover:bg-red-50 dark:hover:bg-red-950/20">
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : signatureUploading ? (
+                  <div className="p-6 border border-border bg-secondary/30 rounded-xl">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        <span className="text-sm text-muted-foreground">Uploading...</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                        <div className="h-full bg-primary rounded-full transition-all duration-200 ease-out" style={{ width: `${signatureProgress}%` }} />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <label htmlFor="signature-input" className="flex flex-col items-center justify-center gap-2 p-6 border border-dashed border-border bg-secondary/20 rounded-xl cursor-pointer hover:bg-secondary/40 hover:border-primary/40 transition-all duration-200 active:scale-[0.99]">
+                    <input id="signature-input" ref={signatureRef} type="file" accept=".png,.jpg,.jpeg" onChange={handleSignatureUpload} className="sr-only" />
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                      <Upload className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <span className="text-sm text-muted-foreground">Tap to upload</span>
+                  </label>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">
                 Please upload a clear image of your signature on a white background.
               </p>
