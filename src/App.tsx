@@ -13,6 +13,7 @@ import Success from "./pages/Success";
 import AdminPayments from "./pages/AdminPayments";
 import PassportViewer from "./pages/PassportViewer";
 import Demo from "./pages/Demo";
+import Manifesto from "./pages/Manifesto";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/passport/:uid" element={<PassportViewer />} />
           <Route path="/passport/setup" element={<Profile />} />
           <Route path="/demo" element={<Demo />} />
+          <Route path="/manifesto" element={<Manifesto />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
