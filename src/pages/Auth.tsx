@@ -19,9 +19,16 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const [mode, setMode] = useState<"signin" | "signup" | "forgot" | "reset">(
-    searchParams.get("mode") === "signup" ? "signup" : "signin"
-  );
+  // Check URL hash for recovery token on initial load
+  const isRecoveryFlow = () => {
+    const hash = window.location.hash;
+    return hash.includes("type=recovery") || hash.includes("type=magiclink");
+  };
+  
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot" | "reset">(() => {
+    if (isRecoveryFlow()) return "reset";
+    return searchParams.get("mode") === "signup" ? "signup" : "signin";
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -45,8 +52,9 @@ const Auth = () => {
       }
     });
 
+    // Check session but don't redirect if in recovery flow
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user && mode !== "reset") {
+      if (session?.user && mode !== "reset" && !isRecoveryFlow()) {
         navigate("/dashboard");
       }
     });

@@ -66,7 +66,7 @@ serve(async (req) => {
     }
 
     const { error } = await resend.emails.send({
-      from: "GlobID <onboarding@resend.dev>",
+      from: "GlobID <noreply@globid.co>",
       to: [email],
       subject,
       html,
