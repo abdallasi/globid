@@ -11,6 +11,8 @@ import { User } from "@supabase/supabase-js";
 import { ArrowLeft, Upload, Check, X } from "lucide-react";
 import CompletionModal from "@/components/CompletionModal";
 import DocumentUpload from "@/components/DocumentUpload";
+import VerifiedCheckmark from "@/components/VerifiedCheckmark";
+import { useVerification } from "@/contexts/VerificationContext";
 
 const COUNTRIES = [
   { code: "AE", name: "United Arab Emirates" },
@@ -67,6 +69,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { triggerVerificationSequence, markFieldAsVerified } = useVerification();
   const step = searchParams.get("step") || "identity";
   
   const [user, setUser] = useState<User | null>(null);
@@ -127,6 +130,24 @@ const Profile = () => {
         .eq("user_id", user.id);
 
       if (error) throw error;
+
+      // Trigger verification for saved fields
+      const fieldsToVerify: string[] = [];
+      if (step === "identity" && profile.nationality && profile.residence_country) {
+        fieldsToVerify.push("personal_info");
+      }
+      if (step === "employment" && profile.bank_account_number) {
+        fieldsToVerify.push("bank_details");
+        if (profile.swift_code) fieldsToVerify.push("swift_code");
+        if (profile.tax_id) fieldsToVerify.push("tax_id");
+        if (profile.address) fieldsToVerify.push("address");
+      }
+
+      if (fieldsToVerify.length > 0) {
+        triggerVerificationSequence(() => {
+          fieldsToVerify.forEach(field => markFieldAsVerified(field));
+        });
+      }
 
       // Check if profile is complete after signature step
       if (isSignatureStep && profile.signature_file_url) {

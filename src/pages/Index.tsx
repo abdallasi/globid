@@ -54,7 +54,7 @@ const Index = () => {
               GlobID
             </Link>
             <div className="flex items-center gap-4">
-              <Link to="/manifesto" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/manifesto" className="hidden md:block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Manifesto
               </Link>
               <Link to="/demo" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

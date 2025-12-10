@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Check, X, Upload } from "lucide-react";
+import { useVerification } from "@/contexts/VerificationContext";
 
 interface DocumentUploadProps {
   label: string;
@@ -24,6 +25,8 @@ const DocumentUpload = ({
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
+  const { triggerVerificationSequence, markFieldAsVerified, isFieldVerified } = useVerification();
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -57,7 +60,14 @@ const DocumentUpload = ({
       setShowSuccess(false);
       setIsUploading(false);
       setProgress(0);
-    }, 1200);
+      
+      // Trigger verification sequence after upload
+      triggerVerificationSequence(() => {
+        markFieldAsVerified(field);
+        setIsPulsing(true);
+        setTimeout(() => setIsPulsing(false), 400);
+      });
+    }, 600);
 
     // Reset input
     e.target.value = "";
@@ -86,14 +96,21 @@ const DocumentUpload = ({
     );
   }
 
+  const fieldIsVerified = isFieldVerified(field);
+
   if (value) {
     return (
       <div className="space-y-2">
         <Label className="flex items-center gap-2">
           {label}
           {optional && <span className="text-xs text-muted-foreground font-normal">(Optional)</span>}
+          {fieldIsVerified && (
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#00D06F]/10 ml-1">
+              <Check className="w-3 h-3 text-[#00D06F]" strokeWidth={2.5} />
+            </span>
+          )}
         </Label>
-        <div className="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
+        <div className={`flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-xl ${isPulsing ? 'verify-pulse' : ''}`}>
           <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
             <Check className="h-3 w-3 text-white" />
           </div>

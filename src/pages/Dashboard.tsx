@@ -4,16 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { User, Session } from "@supabase/supabase-js";
 import { 
-  User as UserIcon, 
-  FileText, 
-  CreditCard, 
-  Share2, 
   LogOut,
   CheckCircle2,
-  Circle,
   ArrowRight,
   ExternalLink
 } from "lucide-react";
+import VerificationStatus from "@/components/VerificationStatus";
 
 interface EmployeeProfile {
   id: string;
@@ -239,6 +235,11 @@ const Dashboard = () => {
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Verification Status */}
+        <div className="mt-8">
+          <VerificationStatus profile={profile} />
         </div>
 
         {/* Share Section */}
