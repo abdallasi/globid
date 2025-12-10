@@ -196,12 +196,23 @@ const Profile = () => {
     }
   };
 
-  const handleDocUpload = (field: string, url: string | null) => {
+  const handleDocUpload = async (field: string, url: string | null) => {
     triggerHaptic(15);
-    setProfile(prev => {
-      const updated = { ...prev, [field]: url };
-      return updated;
-    });
+    
+    // Update local state immediately using functional update
+    setProfile(prev => ({ ...prev, [field]: url }));
+    
+    // Also save to database immediately to prevent data loss
+    if (user) {
+      try {
+        await supabase
+          .from("employee_profiles")
+          .update({ [field]: url })
+          .eq("user_id", user.id);
+      } catch (error) {
+        console.error("Error saving document:", error);
+      }
+    }
   };
 
   // Signature-only upload (this one works)
