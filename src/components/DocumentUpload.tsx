@@ -13,6 +13,13 @@ interface DocumentUploadProps {
   optional?: boolean;
 }
 
+// Haptic feedback helper
+const triggerHaptic = (pattern: number | number[] = 10) => {
+  if (navigator.vibrate) {
+    navigator.vibrate(pattern);
+  }
+};
+
 const DocumentUpload = ({
   label,
   field,
@@ -31,6 +38,8 @@ const DocumentUpload = ({
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !userId) return;
+
+    triggerHaptic(10);
 
     setIsUploading(true);
     setProgress(0);
@@ -55,6 +64,7 @@ const DocumentUpload = ({
     // Only update local state - let parent handle DB save
     onUploadComplete(field, mockUrl);
     setShowSuccess(true);
+    triggerHaptic([10, 50, 20]); // Success haptic pattern
 
     setTimeout(() => {
       setShowSuccess(false);
@@ -74,6 +84,7 @@ const DocumentUpload = ({
   };
 
   const handleClear = () => {
+    triggerHaptic(5);
     onUploadComplete(field, null);
   };
 
