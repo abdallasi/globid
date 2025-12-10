@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Download, 
-  ExternalLink, 
   User, 
   FileText, 
   Building2, 
@@ -122,13 +121,6 @@ const PassportViewer = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleExport = (platform: string) => {
-    toast({
-      title: `Exporting to ${platform}`,
-      description: "Your passport data is being prepared for export.",
-    });
   };
 
   const handleDownloadPDF = async () => {
@@ -367,7 +359,7 @@ const PassportViewer = () => {
         </div>
 
         {/* Actions */}
-        <div className="mt-6 sm:mt-8 space-y-4">
+        <div className="mt-6 sm:mt-8">
           <Button
             onClick={handleDownloadPDF}
             variant="apple-blue"
@@ -378,36 +370,6 @@ const PassportViewer = () => {
             <Download className="mr-2 h-4 w-4" />
             {downloading ? "Generating PDF..." : "Download Passport PDF"}
           </Button>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Button
-              onClick={() => handleExport("Deel")}
-              variant="apple-outline"
-              size="default"
-              className="w-full text-sm"
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Export to Deel
-            </Button>
-            <Button
-              onClick={() => handleExport("Remote")}
-              variant="apple-outline"
-              size="default"
-              className="w-full text-sm"
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Export to Remote
-            </Button>
-            <Button
-              onClick={() => handleExport("Oyster")}
-              variant="apple-outline"
-              size="default"
-              className="w-full text-sm"
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Export to Oyster
-            </Button>
-          </div>
         </div>
       </div>
     </div>
