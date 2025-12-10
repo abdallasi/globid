@@ -96,8 +96,8 @@ const Payment = () => {
         currency: "NGN",
         ref: data.reference,
         callback: function(response: { reference: string }) {
-          // Redirect to verify page with reference
-          window.location.href = `/verify?reference=${response.reference}`;
+          // Use navigate for SPA routing (works on any host)
+          navigate(`/verify?reference=${response.reference}`);
         },
         onClose: function() {
           setLoading(false);
