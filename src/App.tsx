@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { VerificationProvider } from "@/contexts/VerificationContext";
+import SupportButton from "@/components/SupportButton";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -25,6 +26,7 @@ const App = () => (
       <VerificationProvider>
         <Toaster />
         <Sonner />
+        <SupportButton />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
