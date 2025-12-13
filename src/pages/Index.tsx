@@ -234,6 +234,40 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Learn More Section */}
+      <section className="py-20 md:py-28 bg-apple-gray">
+        <div className="apple-container">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight">
+              Learn More
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto px-4">
+            <Link 
+              to="/global-worker-verification" 
+              className="apple-card p-6 hover:shadow-lg transition-shadow group"
+            >
+              <p className="font-semibold text-lg group-hover:text-primary transition-colors">Worker Verification</p>
+              <p className="text-sm text-muted-foreground mt-2">Why verification matters for remote hiring</p>
+            </Link>
+            <Link 
+              to="/hire-international-talent" 
+              className="apple-card p-6 hover:shadow-lg transition-shadow group"
+            >
+              <p className="font-semibold text-lg group-hover:text-primary transition-colors">Hire Global Talent</p>
+              <p className="text-sm text-muted-foreground mt-2">Safe international hiring for employers</p>
+            </Link>
+            <Link 
+              to="/mena-remote-work" 
+              className="apple-card p-6 hover:shadow-lg transition-shadow group"
+            >
+              <p className="font-semibold text-lg group-hover:text-primary transition-colors">MENA Remote Work</p>
+              <p className="text-sm text-muted-foreground mt-2">Opportunities in MENA, Africa & beyond</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 border-t border-border">
         <div className="apple-container">

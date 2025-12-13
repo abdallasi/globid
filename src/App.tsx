@@ -46,6 +46,11 @@ const App = () => (
             <Route path="/passport/setup" element={<Profile />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/manifesto" element={<Manifesto />} />
+            <Route path="/global-worker-verification" element={<GlobalWorkerVerification />} />
+            <Route path="/remote-work-documents" element={<RemoteWorkDocuments />} />
+            <Route path="/hire-international-talent" element={<HireInternationalTalent />} />
+            <Route path="/identity-for-remote-jobs" element={<IdentityForRemoteJobs />} />
+            <Route path="/mena-remote-work" element={<MenaRemoteWork />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

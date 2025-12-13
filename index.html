@@ -44,22 +44,88 @@
       "name": "GlobID",
       "url": "https://globid.com",
       "logo": "https://globid.com/favicon.png",
-      "description": "Universal employment ID platform for borderless work. Pre-employment compliance passports for MENA & African professionals.",
+      "description": "Global worker identity and verification platform for borderless employment",
+      "areaServed": ["MENA", "Africa", "Canada"],
       "sameAs": []
     }
     </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": "WebSite",
       "name": "GlobID",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "50",
-        "priceCurrency": "USD"
+      "url": "https://globid.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://globid.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
       }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "GlobID Verification",
+      "serviceType": "Identity Verification",
+      "provider": {
+        "@type": "Organization",
+        "name": "GlobID"
+      },
+      "description": "Universal employment ID and verification for remote workers",
+      "category": ["Identity Verification", "Employment Infrastructure"],
+      "audience": {
+        "@type": "Audience",
+        "audienceType": ["Workers", "Employers"]
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is GlobID?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GlobID is a universal employment ID platform that helps global workers verify their identity and get trusted by international employers. It provides pre-employment compliance passports for professionals from MENA, Africa, and emerging markets."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does worker verification work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Workers create a profile, upload required documents (passport, national ID, proof of address), complete payment, and receive a verified employment passport that can be shared with employers worldwide."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents are required for remote work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Required documents vary by country but typically include passport or national ID, proof of address, and tax identification. MENA-specific documents like Emirates ID (UAE) or Iqama (Saudi Arabia) may also be required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can employers hire international talent safely?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GlobID provides verified worker profiles with authenticated identity documents, enabling employers to hire international talent with confidence while meeting compliance requirements."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What regions does GlobID support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GlobID supports professionals from MENA (UAE, Saudi Arabia, Egypt, Morocco, Jordan, Tunisia), Africa (Nigeria, Kenya, Rwanda, Uganda, South Africa, Tanzania, Senegal, Ghana), India, and Canada."
+          }
+        }
+      ]
     }
     </script>
   </head>
