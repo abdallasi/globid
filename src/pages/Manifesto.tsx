@@ -183,6 +183,50 @@ const Manifesto = () => {
 
           <hr className="border-border/40 mb-16" />
 
+          {/* Explore More */}
+          <section className="mb-16">
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-8">
+              Learn More
+            </p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Link 
+                to="/global-worker-verification" 
+                className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+              >
+                <p className="font-medium">Global Worker Verification</p>
+                <p className="text-sm text-muted-foreground mt-1">Why verification matters for remote hiring</p>
+              </Link>
+              <Link 
+                to="/remote-work-documents" 
+                className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+              >
+                <p className="font-medium">Remote Work Documents</p>
+                <p className="text-sm text-muted-foreground mt-1">What employers require for compliance</p>
+              </Link>
+              <Link 
+                to="/hire-international-talent" 
+                className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+              >
+                <p className="font-medium">Hire International Talent</p>
+                <p className="text-sm text-muted-foreground mt-1">Safe global hiring for employers</p>
+              </Link>
+              <Link 
+                to="/identity-for-remote-jobs" 
+                className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
+              >
+                <p className="font-medium">Identity for Remote Jobs</p>
+                <p className="text-sm text-muted-foreground mt-1">Why identity matters more than resumes</p>
+              </Link>
+              <Link 
+                to="/mena-remote-work" 
+                className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all sm:col-span-2"
+              >
+                <p className="font-medium">MENA Remote Work</p>
+                <p className="text-sm text-muted-foreground mt-1">Opportunities in MENA, Africa & Canada</p>
+              </Link>
+            </div>
+          </section>
+
           {/* Back Link */}
           <footer>
             <Link 
