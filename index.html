@@ -5,63 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     
     <!-- Primary Meta Tags -->
     <title>GlobID | Universal Employment ID for Global Remote Work</title>
-    <meta name="title" content="GlobID | Universal Employment ID for Global Remote Work" />
-    <meta name="description" content="Get your verified employment passport in minutes. Pre-employment compliance for MENA & African professionals. Onboard instantly with Deel, Remote, Oyster & global employers." />
-    <meta name="author" content="GlobID" />
-    <meta name="keywords" content="employment passport, universal employment ID, MENA jobs, Africa remote work, Deel compliance, Remote.com onboarding, KYC verification, global hiring, work permit, contractor compliance, EOR" />
-    <meta name="robots" content="index, follow" />
-    <meta name="language" content="English" />
+    <meta name="description" content="GlobID helps global workers verify their identity and get trusted by international employers. Pre-employment compliance for MENA, Africa & emerging markets." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://globid.co/" />
     
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://globid.com/" />
-    <meta property="og:title" content="GlobID - Universal Employment ID for Borderless Work" />
-    <meta property="og:description" content="Create your verified employment passport. Instant compliance for remote professionals from MENA, Africa & emerging markets. Hire and get hired globally." />
-    <meta property="og:image" content="https://globid.com/favicon.png" />
     <meta property="og:site_name" content="GlobID" />
+    <meta property="og:title" content="GlobID | Universal Employment ID" />
+    <meta property="og:description" content="GlobID helps global workers verify their identity and get trusted by international employers." />
+    <meta property="og:url" content="https://globid.co/" />
+    <meta property="og:image" content="https://globid.co/og-image.png" />
     <meta property="og:locale" content="en_US" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://globid.com/" />
-    <meta name="twitter:title" content="GlobID - Universal Employment ID for Borderless Work" />
-    <meta name="twitter:description" content="Create your verified employment passport. Instant compliance for remote professionals from MENA, Africa & emerging markets." />
-    <meta name="twitter:image" content="https://globid.com/favicon.png" />
+    <meta name="twitter:title" content="GlobID | Universal Employment ID" />
+    <meta name="twitter:description" content="GlobID helps global workers verify their identity and get trusted by international employers." />
+    <meta name="twitter:image" content="https://globid.co/og-image.png" />
     
-    <!-- Canonical -->
-    <link rel="canonical" href="https://globid.com" />
-    
-    <!-- Structured Data -->
+    <!-- Structured Data: Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "GlobID",
-      "url": "https://globid.com",
-      "logo": "https://globid.com/favicon.png",
-      "description": "Global worker identity and verification platform for borderless employment",
-      "areaServed": ["MENA", "Africa", "Canada"],
+      "url": "https://globid.co",
+      "logo": "https://globid.co/favicon.png",
+      "description": "Universal employment ID and verification platform for global remote work",
       "sameAs": []
     }
     </script>
+    
+    <!-- Structured Data: WebSite with Sitelinks Search -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "GlobID",
-      "url": "https://globid.com",
+      "url": "https://globid.co",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://globid.com/search?q={search_term_string}",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://globid.co/search?q={search_term_string}"
+        },
         "query-input": "required name=search_term_string"
       }
     }
     </script>
+    
+    <!-- Structured Data: SiteNavigationElement for Sitelinks -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "SiteNavigationElement",
+          "position": 1,
+          "name": "Dashboard",
+          "url": "https://globid.co/dashboard"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "position": 2,
+          "name": "Get Verified",
+          "url": "https://globid.co/verify"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "position": 3,
+          "name": "Manifesto",
+          "url": "https://globid.co/manifesto"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "position": 4,
+          "name": "For Employers",
+          "url": "https://globid.co/hire-international-talent"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "position": 5,
+          "name": "MENA & Africa",
+          "url": "https://globid.co/mena-remote-work"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "position": 6,
+          "name": "Book a Demo",
+          "url": "https://globid.co/demo"
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Structured Data: Service -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -72,14 +117,11 @@
         "@type": "Organization",
         "name": "GlobID"
       },
-      "description": "Universal employment ID and verification for remote workers",
-      "category": ["Identity Verification", "Employment Infrastructure"],
-      "audience": {
-        "@type": "Audience",
-        "audienceType": ["Workers", "Employers"]
-      }
+      "description": "Universal employment ID and verification for remote workers"
     }
     </script>
+    
+    <!-- Structured Data: FAQPage -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -90,31 +132,15 @@
           "name": "What is GlobID?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "GlobID is a universal employment ID platform that helps global workers verify their identity and get trusted by international employers. It provides pre-employment compliance passports for professionals from MENA, Africa, and emerging markets."
+            "text": "GlobID is a universal employment ID platform that helps global workers verify their identity and get trusted by international employers."
           }
         },
         {
           "@type": "Question",
-          "name": "How does worker verification work?",
+          "name": "How does GlobID verification work?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Workers create a profile, upload required documents (passport, national ID, proof of address), complete payment, and receive a verified employment passport that can be shared with employers worldwide."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What documents are required for remote work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Required documents vary by country but typically include passport or national ID, proof of address, and tax identification. MENA-specific documents like Emirates ID (UAE) or Iqama (Saudi Arabia) may also be required."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How can employers hire international talent safely?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "GlobID provides verified worker profiles with authenticated identity documents, enabling employers to hire international talent with confidence while meeting compliance requirements."
+            "text": "Workers create a profile, upload required documents, complete verification, and receive a verified employment passport that can be shared with employers worldwide."
           }
         },
         {
@@ -122,7 +148,7 @@
           "name": "What regions does GlobID support?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "GlobID supports professionals from MENA (UAE, Saudi Arabia, Egypt, Morocco, Jordan, Tunisia), Africa (Nigeria, Kenya, Rwanda, Uganda, South Africa, Tanzania, Senegal, Ghana), India, and Canada."
+            "text": "GlobID supports professionals from MENA, Africa, India, and Canada."
           }
         }
       ]
