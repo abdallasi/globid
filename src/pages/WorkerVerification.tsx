@@ -1,14 +1,27 @@
-import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const WorkerVerification = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Worker Verification — International Hiring Verification | GlobID</title>
+        <meta name="description" content="Learn how worker verification works for international hiring. Verify identity, work authorization, tax status, and banking information." />
+        <link rel="canonical" href="https://globid.co/worker-verification" />
+        <meta property="og:title" content="Worker Verification — International Hiring Verification" />
+        <meta property="og:description" content="Learn how worker verification works for international hiring." />
+        <meta property="og:url" content="https://globid.co/worker-verification" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Worker Verification — International Hiring Verification" />
+        <meta name="twitter:description" content="Learn how worker verification works for international hiring." />
+      </Helmet>
+
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-semibold text-foreground">GlobID</Link>
-          <Link to="/auth"><Button size="sm">Get Started</Button></Link>
+          <a href="/" className="text-xl font-semibold text-foreground">GlobID</a>
+          <a href="/auth"><Button size="sm">Get Started</Button></a>
         </div>
       </nav>
       <main className="pt-24 pb-20">
@@ -38,17 +51,17 @@ const WorkerVerification = () => {
           <section className="mb-16 p-8 bg-muted/50 rounded-2xl text-center">
             <h2 className="text-2xl font-semibold text-foreground mb-4">Get Verified</h2>
             <p className="text-muted-foreground mb-6">Create your verified worker profile and unlock global opportunities.</p>
-            <Link to="/auth"><Button size="lg">Create Your GlobID <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+            <a href="/auth"><Button size="lg">Create Your GlobID <ArrowRight className="ml-2 h-4 w-4" /></Button></a>
           </section>
           <section className="mb-12">
             <h2 className="text-xl font-semibold text-foreground mb-4">Related Topics</h2>
             <div className="grid gap-3">
-              <Link to="/global-worker-verification" className="text-primary hover:underline flex items-center gap-2">Global Worker Verification <ArrowRight className="h-4 w-4" /></Link>
-              <Link to="/global-worker-identity" className="text-primary hover:underline flex items-center gap-2">Global Worker Identity <ArrowRight className="h-4 w-4" /></Link>
-              <Link to="/remote-hiring-risks" className="text-primary hover:underline flex items-center gap-2">Remote Hiring Risks <ArrowRight className="h-4 w-4" /></Link>
+              <a href="/global-worker-verification" className="text-primary hover:underline flex items-center gap-2">Global Worker Verification <ArrowRight className="h-4 w-4" /></a>
+              <a href="/global-worker-identity" className="text-primary hover:underline flex items-center gap-2">Global Worker Identity <ArrowRight className="h-4 w-4" /></a>
+              <a href="/remote-hiring-risks" className="text-primary hover:underline flex items-center gap-2">Remote Hiring Risks <ArrowRight className="h-4 w-4" /></a>
             </div>
           </section>
-          <div className="pt-8 border-t border-border"><Link to="/" className="text-muted-foreground hover:text-foreground flex items-center gap-2"><ArrowLeft className="h-4 w-4" /> Back to Home</Link></div>
+          <div className="pt-8 border-t border-border"><a href="/" className="text-muted-foreground hover:text-foreground flex items-center gap-2"><ArrowLeft className="h-4 w-4" /> Back to Home</a></div>
         </article>
       </main>
     </div>
