@@ -22,6 +22,16 @@ import PassportViewer from "./pages/PassportViewer";
 import Demo from "./pages/Demo";
 import Manifesto from "./pages/Manifesto";
 import NotFound from "./pages/NotFound";
+import WhatIsGlobID from "./pages/WhatIsGlobID";
+import GlobalWorkerIdentity from "./pages/GlobalWorkerIdentity";
+import GlobalHiringCompliance from "./pages/GlobalHiringCompliance";
+import EmployerOfRecordAlternative from "./pages/EmployerOfRecordAlternative";
+import DeelAlternative from "./pages/DeelAlternative";
+import HireInMena from "./pages/HireInMena";
+import HireInAfrica from "./pages/HireInAfrica";
+import HireInNigeria from "./pages/HireInNigeria";
+import WorkerVerification from "./pages/WorkerVerification";
+import RemoteHiringRisks from "./pages/RemoteHiringRisks";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +61,16 @@ const App = () => (
             <Route path="/hire-international-talent" element={<HireInternationalTalent />} />
             <Route path="/identity-for-remote-jobs" element={<IdentityForRemoteJobs />} />
             <Route path="/mena-remote-work" element={<MenaRemoteWork />} />
+            <Route path="/what-is-globid" element={<WhatIsGlobID />} />
+            <Route path="/global-worker-identity" element={<GlobalWorkerIdentity />} />
+            <Route path="/global-hiring-compliance" element={<GlobalHiringCompliance />} />
+            <Route path="/employer-of-record-alternative" element={<EmployerOfRecordAlternative />} />
+            <Route path="/deel-alternative" element={<DeelAlternative />} />
+            <Route path="/hire-in-mena" element={<HireInMena />} />
+            <Route path="/hire-in-africa" element={<HireInAfrica />} />
+            <Route path="/hire-in-nigeria" element={<HireInNigeria />} />
+            <Route path="/worker-verification" element={<WorkerVerification />} />
+            <Route path="/remote-hiring-risks" element={<RemoteHiringRisks />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

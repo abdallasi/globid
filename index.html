@@ -5,44 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     
     <!-- Primary Meta Tags -->
-    <title>GlobID | Universal Employment ID for Global Remote Work</title>
-    <meta name="description" content="GlobID helps global workers verify their identity and get trusted by international employers. Pre-employment compliance for MENA, Africa & emerging markets." />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <title>GlobID — Global Worker Identity for Cross-Border Hiring</title>
+    <meta name="description" content="GlobID is a global worker identity platform that helps companies hire internationally with speed, clarity, and compliance. Built for MENA." />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://globid.co/" />
     
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="GlobID" />
-    <meta property="og:title" content="GlobID | Universal Employment ID" />
-    <meta property="og:description" content="GlobID helps global workers verify their identity and get trusted by international employers." />
+    <meta property="og:title" content="GlobID — Global Worker Identity for Cross-Border Hiring" />
+    <meta property="og:description" content="GlobID is a global worker identity platform that helps companies hire internationally with speed, clarity, and compliance. Built for MENA." />
     <meta property="og:url" content="https://globid.co/" />
-    <meta property="og:image" content="https://globid.co/og-image.png" />
+    <meta property="og:image" content="https://globid.co/icon-512.png" />
     <meta property="og:locale" content="en_US" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="GlobID | Universal Employment ID" />
-    <meta name="twitter:description" content="GlobID helps global workers verify their identity and get trusted by international employers." />
-    <meta name="twitter:image" content="https://globid.co/og-image.png" />
+    <meta name="twitter:title" content="GlobID — Global Worker Identity for Cross-Border Hiring" />
+    <meta name="twitter:description" content="GlobID is a global worker identity platform that helps companies hire internationally with speed, clarity, and compliance. Built for MENA." />
+    <meta name="twitter:image" content="https://globid.co/icon-512.png" />
     
-    <!-- Structured Data: Organization -->
+    <!-- JSON-LD: Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "GlobID",
       "url": "https://globid.co",
-      "logo": "https://globid.co/favicon.png",
-      "description": "Universal employment ID and verification platform for global remote work",
-      "sameAs": []
+      "logo": "https://globid.co/icon-512.png",
+      "description": "Global worker identity and compliance infrastructure",
+      "sameAs": [
+        "https://www.linkedin.com/company/globid"
+      ]
     }
     </script>
     
-    <!-- Structured Data: WebSite with Sitelinks Search -->
+    <!-- JSON-LD: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "GlobID",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free access with paid onboarding for individuals"
+      }
+    }
+    </script>
+    
+    <!-- JSON-LD: WebSite with SearchAction -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -60,7 +81,7 @@
     }
     </script>
     
-    <!-- Structured Data: SiteNavigationElement for Sitelinks -->
+    <!-- JSON-LD: SiteNavigationElement -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -75,81 +96,32 @@
         {
           "@type": "SiteNavigationElement",
           "position": 2,
-          "name": "Get Verified",
-          "url": "https://globid.co/verify"
+          "name": "What is GlobID",
+          "url": "https://globid.co/what-is-globid"
         },
         {
           "@type": "SiteNavigationElement",
           "position": 3,
-          "name": "Manifesto",
-          "url": "https://globid.co/manifesto"
-        },
-        {
-          "@type": "SiteNavigationElement",
-          "position": 4,
           "name": "For Employers",
           "url": "https://globid.co/hire-international-talent"
         },
         {
           "@type": "SiteNavigationElement",
+          "position": 4,
+          "name": "Hire in MENA",
+          "url": "https://globid.co/hire-in-mena"
+        },
+        {
+          "@type": "SiteNavigationElement",
           "position": 5,
-          "name": "MENA & Africa",
-          "url": "https://globid.co/mena-remote-work"
+          "name": "Hire in Africa",
+          "url": "https://globid.co/hire-in-africa"
         },
         {
           "@type": "SiteNavigationElement",
           "position": 6,
           "name": "Book a Demo",
           "url": "https://globid.co/demo"
-        }
-      ]
-    }
-    </script>
-    
-    <!-- Structured Data: Service -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "name": "GlobID Verification",
-      "serviceType": "Identity Verification",
-      "provider": {
-        "@type": "Organization",
-        "name": "GlobID"
-      },
-      "description": "Universal employment ID and verification for remote workers"
-    }
-    </script>
-    
-    <!-- Structured Data: FAQPage -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is GlobID?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "GlobID is a universal employment ID platform that helps global workers verify their identity and get trusted by international employers."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does GlobID verification work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Workers create a profile, upload required documents, complete verification, and receive a verified employment passport that can be shared with employers worldwide."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What regions does GlobID support?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "GlobID supports professionals from MENA, Africa, India, and Canada."
-          }
         }
       ]
     }
