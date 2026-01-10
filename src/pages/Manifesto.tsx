@@ -1,15 +1,28 @@
-import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft } from "lucide-react";
 
 const Manifesto = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>The GlobID Manifesto — Work Should Be Borderless</title>
+        <meta name="description" content="Work should be borderless. Employment should be effortless. Read the GlobID manifesto on building infrastructure for the borderless world of work." />
+        <link rel="canonical" href="https://globid.co/manifesto" />
+        <meta property="og:title" content="The GlobID Manifesto — Work Should Be Borderless" />
+        <meta property="og:description" content="Work should be borderless. Employment should be effortless. Read the GlobID manifesto." />
+        <meta property="og:url" content="https://globid.co/manifesto" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="The GlobID Manifesto — Work Should Be Borderless" />
+        <meta name="twitter:description" content="Work should be borderless. Employment should be effortless." />
+      </Helmet>
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center">
-          <Link to="/" className="font-semibold text-lg tracking-tight">
+          <a href="/" className="font-semibold text-lg tracking-tight">
             GlobID
-          </Link>
+          </a>
         </div>
       </nav>
 
@@ -189,53 +202,53 @@ const Manifesto = () => {
               Learn More
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Link 
-                to="/global-worker-verification" 
+              <a 
+                href="/global-worker-verification" 
                 className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
               >
                 <p className="font-medium">Global Worker Verification</p>
                 <p className="text-sm text-muted-foreground mt-1">Why verification matters for remote hiring</p>
-              </Link>
-              <Link 
-                to="/remote-work-documents" 
+              </a>
+              <a 
+                href="/remote-work-documents" 
                 className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
               >
                 <p className="font-medium">Remote Work Documents</p>
                 <p className="text-sm text-muted-foreground mt-1">What employers require for compliance</p>
-              </Link>
-              <Link 
-                to="/hire-international-talent" 
+              </a>
+              <a 
+                href="/hire-international-talent" 
                 className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
               >
                 <p className="font-medium">Hire International Talent</p>
                 <p className="text-sm text-muted-foreground mt-1">Safe global hiring for employers</p>
-              </Link>
-              <Link 
-                to="/identity-for-remote-jobs" 
+              </a>
+              <a 
+                href="/identity-for-remote-jobs" 
                 className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all"
               >
                 <p className="font-medium">Identity for Remote Jobs</p>
                 <p className="text-sm text-muted-foreground mt-1">Why identity matters more than resumes</p>
-              </Link>
-              <Link 
-                to="/mena-remote-work" 
+              </a>
+              <a 
+                href="/mena-remote-work" 
                 className="p-4 border border-border/50 rounded-xl hover:border-primary/30 hover:bg-primary/5 transition-all sm:col-span-2"
               >
                 <p className="font-medium">MENA Remote Work</p>
                 <p className="text-sm text-muted-foreground mt-1">Opportunities in MENA, Africa & Canada</p>
-              </Link>
+              </a>
             </div>
           </section>
 
           {/* Back Link */}
           <footer>
-            <Link 
-              to="/" 
+            <a 
+              href="/" 
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home
-            </Link>
+            </a>
           </footer>
 
         </div>

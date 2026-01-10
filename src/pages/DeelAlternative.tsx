@@ -1,19 +1,32 @@
-import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const DeelAlternative = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Deel Alternative — Compare Global Hiring Platforms | GlobID</title>
+        <meta name="description" content="Compare Deel with alternative global hiring solutions. Find the right platform for your international hiring needs, from EORs to verification platforms." />
+        <link rel="canonical" href="https://globid.co/deel-alternative" />
+        <meta property="og:title" content="Deel Alternative — Compare Global Hiring Platforms" />
+        <meta property="og:description" content="Compare Deel with alternative global hiring solutions. Find the right platform for your needs." />
+        <meta property="og:url" content="https://globid.co/deel-alternative" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Deel Alternative — Compare Global Hiring Platforms" />
+        <meta name="twitter:description" content="Compare Deel with alternative global hiring solutions." />
+      </Helmet>
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-semibold text-foreground">
+          <a href="/" className="text-xl font-semibold text-foreground">
             GlobID
-          </Link>
-          <Link to="/demo">
+          </a>
+          <a href="/demo">
             <Button size="sm">Book a Demo</Button>
-          </Link>
+          </a>
         </div>
       </nav>
 
@@ -157,11 +170,11 @@ const DeelAlternative = () => {
             <p className="text-muted-foreground mb-6">
               Talk to our team about your international hiring needs.
             </p>
-            <Link to="/demo">
+            <a href="/demo">
               <Button size="lg">
                 Book a Demo <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </section>
 
           {/* Related Links */}
@@ -170,41 +183,41 @@ const DeelAlternative = () => {
               Related Topics
             </h2>
             <div className="grid gap-3">
-              <Link 
-                to="/employer-of-record-alternative" 
+              <a 
+                href="/employer-of-record-alternative" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Employer of Record Alternatives <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/hire-international-talent" 
+              </a>
+              <a 
+                href="/hire-international-talent" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Hiring International Talent <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/global-hiring-compliance" 
+              </a>
+              <a 
+                href="/global-hiring-compliance" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Global Hiring Compliance <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/what-is-globid" 
+              </a>
+              <a 
+                href="/what-is-globid" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 What is GlobID? <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
           </section>
 
           {/* Back Link */}
           <div className="pt-8 border-t border-border">
-            <Link 
-              to="/" 
+            <a 
+              href="/" 
               className="text-muted-foreground hover:text-foreground flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" /> Back to Home
-            </Link>
+            </a>
           </div>
         </article>
       </main>

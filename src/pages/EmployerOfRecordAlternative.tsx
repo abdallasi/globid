@@ -1,19 +1,32 @@
-import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const EmployerOfRecordAlternative = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Employer of Record Alternative — EOR vs Direct Hiring | GlobID</title>
+        <meta name="description" content="Explore alternatives to Employer of Record services. Learn when you need an EOR and when simpler solutions like GlobID work better." />
+        <link rel="canonical" href="https://globid.co/employer-of-record-alternative" />
+        <meta property="og:title" content="Employer of Record Alternative — EOR vs Direct Hiring" />
+        <meta property="og:description" content="Explore alternatives to Employer of Record services. Learn when you need an EOR and when simpler solutions work better." />
+        <meta property="og:url" content="https://globid.co/employer-of-record-alternative" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Employer of Record Alternative — EOR vs Direct Hiring" />
+        <meta name="twitter:description" content="Explore alternatives to EOR services for international hiring." />
+      </Helmet>
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-semibold text-foreground">
+          <a href="/" className="text-xl font-semibold text-foreground">
             GlobID
-          </Link>
-          <Link to="/demo">
+          </a>
+          <a href="/demo">
             <Button size="sm">Book a Demo</Button>
-          </Link>
+          </a>
         </div>
       </nav>
 
@@ -146,11 +159,11 @@ const EmployerOfRecordAlternative = () => {
             <p className="text-muted-foreground mb-6">
               See if GlobID can help you hire internationally without EOR overhead.
             </p>
-            <Link to="/demo">
+            <a href="/demo">
               <Button size="lg">
                 Book a Demo <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </section>
 
           {/* Related Links */}
@@ -159,41 +172,41 @@ const EmployerOfRecordAlternative = () => {
               Related Topics
             </h2>
             <div className="grid gap-3">
-              <Link 
-                to="/deel-alternative" 
+              <a 
+                href="/deel-alternative" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Deel Alternative <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/global-hiring-compliance" 
+              </a>
+              <a 
+                href="/global-hiring-compliance" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Global Hiring Compliance <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/hire-international-talent" 
+              </a>
+              <a 
+                href="/hire-international-talent" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Hiring International Talent <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/what-is-globid" 
+              </a>
+              <a 
+                href="/what-is-globid" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 What is GlobID? <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
           </section>
 
           {/* Back Link */}
           <div className="pt-8 border-t border-border">
-            <Link 
-              to="/" 
+            <a 
+              href="/" 
               className="text-muted-foreground hover:text-foreground flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" /> Back to Home
-            </Link>
+            </a>
           </div>
         </article>
       </main>

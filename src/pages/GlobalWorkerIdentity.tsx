@@ -1,19 +1,32 @@
-import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const GlobalWorkerIdentity = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Global Worker Identity — Verified Professional Profiles | GlobID</title>
+        <meta name="description" content="A global worker identity is a verified professional profile that works across borders. Learn how GlobID creates portable credentials for international hiring." />
+        <link rel="canonical" href="https://globid.co/global-worker-identity" />
+        <meta property="og:title" content="Global Worker Identity — Verified Professional Profiles" />
+        <meta property="og:description" content="A global worker identity is a verified professional profile that works across borders. Learn how GlobID creates portable credentials." />
+        <meta property="og:url" content="https://globid.co/global-worker-identity" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Global Worker Identity — Verified Professional Profiles" />
+        <meta name="twitter:description" content="A global worker identity is a verified professional profile that works across borders." />
+      </Helmet>
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-semibold text-foreground">
+          <a href="/" className="text-xl font-semibold text-foreground">
             GlobID
-          </Link>
-          <Link to="/auth">
+          </a>
+          <a href="/auth">
             <Button size="sm">Get Started</Button>
-          </Link>
+          </a>
         </div>
       </nav>
 
@@ -143,11 +156,11 @@ const GlobalWorkerIdentity = () => {
             <p className="text-muted-foreground mb-6">
               Create a verified profile that opens doors to opportunities worldwide.
             </p>
-            <Link to="/auth">
+            <a href="/auth">
               <Button size="lg">
                 Create Your GlobID <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </section>
 
           {/* Related Links */}
@@ -156,41 +169,41 @@ const GlobalWorkerIdentity = () => {
               Related Topics
             </h2>
             <div className="grid gap-3">
-              <Link 
-                to="/what-is-globid" 
+              <a 
+                href="/what-is-globid" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 What is GlobID? <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/worker-verification" 
+              </a>
+              <a 
+                href="/worker-verification" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Worker Verification Explained <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/identity-for-remote-jobs" 
+              </a>
+              <a 
+                href="/identity-for-remote-jobs" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Identity for Remote Jobs <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link 
-                to="/global-hiring-compliance" 
+              </a>
+              <a 
+                href="/global-hiring-compliance" 
                 className="text-primary hover:underline flex items-center gap-2"
               >
                 Global Hiring Compliance <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
           </section>
 
           {/* Back Link */}
           <div className="pt-8 border-t border-border">
-            <Link 
-              to="/" 
+            <a 
+              href="/" 
               className="text-muted-foreground hover:text-foreground flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" /> Back to Home
-            </Link>
+            </a>
           </div>
         </article>
       </main>
