@@ -89,7 +89,7 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12 md:mt-16 fade-in opacity-0 stagger-2">
               <Link to="/auth?mode=signup">
                 <Button variant="apple-blue" size="lg" className="min-w-[240px] rounded-full text-base py-6">
-                  Create Your Passport — $50
+                  Create Your Passport — $99
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
