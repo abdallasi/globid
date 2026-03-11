@@ -195,7 +195,7 @@ const RemoteWorkDocuments = () => {
             </p>
             <Link to="/auth?mode=signup">
               <Button variant="apple-blue" size="lg" className="rounded-full">
-                Create Your Passport — $50
+                Create Your Passport — $99
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>

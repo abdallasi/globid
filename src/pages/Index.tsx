@@ -173,7 +173,7 @@ const Index = () => {
             <div className="text-center mt-14">
               <Link to="/auth?mode=signup">
                 <Button variant="apple-blue" size="lg" className="rounded-full text-base py-6 px-8">
-                  Get Verified — $50
+                  Get Verified — $99
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
