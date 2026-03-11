@@ -168,7 +168,7 @@ const Payment = () => {
           {/* Pricing Card */}
           <div className="apple-card p-8">
             <div className="text-center mb-8">
-              <div className="text-5xl font-semibold">$50</div>
+              <div className="text-5xl font-semibold">$99</div>
               <div className="text-muted-foreground mt-1">USD one-time</div>
             </div>
 
