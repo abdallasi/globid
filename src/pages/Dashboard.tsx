@@ -104,7 +104,7 @@ const Dashboard = () => {
     { 
       id: "payment", 
       title: "Payment", 
-      description: "$50 one-time fee",
+      description: "$99 one-time fee",
       complete: isPaid,
       link: "/payment"
     },

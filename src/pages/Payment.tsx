@@ -94,7 +94,7 @@ const Payment = () => {
       const handler = window.PaystackPop.setup({
         key: data.publicKey,
         email: user.email,
-        amount: 7500000, // 75,000 NGN in kobo
+        amount: 14850000, // 148,500 NGN in kobo
         currency: "NGN",
         ref: data.reference,
         callback: function(response: { reference: string }) {
@@ -168,7 +168,7 @@ const Payment = () => {
           {/* Pricing Card */}
           <div className="apple-card p-8">
             <div className="text-center mb-8">
-              <div className="text-5xl font-semibold">$50</div>
+              <div className="text-5xl font-semibold">$99</div>
               <div className="text-muted-foreground mt-1">USD one-time</div>
             </div>
 
