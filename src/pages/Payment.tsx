@@ -94,7 +94,7 @@ const Payment = () => {
       const handler = window.PaystackPop.setup({
         key: data.publicKey,
         email: user.email,
-        amount: 7500000, // 75,000 NGN in kobo
+        amount: 14850000, // 148,500 NGN in kobo
         currency: "NGN",
         ref: data.reference,
         callback: function(response: { reference: string }) {
