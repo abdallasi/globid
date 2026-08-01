@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Seo from "@/components/Seo";
 
 const IdentityForRemoteJobs = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Identity for Remote Jobs — Prove Who You Are to Any Employer"
+        description="Remote employers need proof of identity and work eligibility. Learn what to prepare and how a verified GlobID passport gets you onboarded faster."
+        path="/identity-for-remote-jobs"
+        type="article"
+        breadcrumbs={[{ name: "Identity for Remote Jobs", path: "/identity-for-remote-jobs" }]}
+      />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">

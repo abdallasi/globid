@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
+import Seo from "@/components/Seo";
 
 const SUPPORTED_COUNTRIES = [
   { name: "UAE", flag: "🇦🇪" },
@@ -46,6 +47,47 @@ const TESTIMONIALS = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="GlobID — Your Global Work Passport for Cross-Border Hiring"
+        description="GlobID gives you one verified global work passport. Get verified once, share it with any employer, and let companies hire and pay you compliantly in 60+ countries."
+        path="/"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "GlobID",
+            url: "https://globid.co",
+            logo: "https://globid.co/icon-512.png",
+            description:
+              "Global worker identity platform for compliant cross-border hiring, onboarding and payments.",
+            email: "support@globid.co",
+            sameAs: ["https://www.linkedin.com/company/globid"],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "GlobID",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            url: "https://globid.co",
+            description:
+              "A verified, portable worker identity that lets companies hire, onboard and pay international talent without opening a local entity.",
+            offers: {
+              "@type": "Offer",
+              price: "99",
+              priceCurrency: "USD",
+              description: "One-time worker verification and passport issuance",
+            },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            serviceType: "Global worker verification and compliant cross-border hiring",
+            provider: { "@type": "Organization", name: "GlobID", url: "https://globid.co" },
+            areaServed: ["MENA", "Africa", "South Asia", "Canada"],
+          },
+        ]}
+      />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="apple-container">
