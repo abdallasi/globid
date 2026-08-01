@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Check, Building2 } from "lucide-react";
 import { z } from "zod";
+import Seo from "@/components/Seo";
 
 const COUNTRIES = [
   { code: "AE", name: "United Arab Emirates" },
@@ -133,6 +134,12 @@ const Demo = () => {
   if (submitted) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <Seo
+          title="Demo Request Received — GlobID"
+          description="Thanks for requesting a GlobID demo. Our team will be in touch within 24 hours."
+          path="/demo"
+          noindex
+        />
         <div className="text-center max-w-md">
           <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6">
             <Check className="h-8 w-8 text-success" />
@@ -151,6 +158,12 @@ const Demo = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Book a GlobID Demo — Compliant Global Hiring for Companies"
+        description="See how GlobID lets your company hire, verify and pay international talent in 60+ countries without opening a local entity. Book a live demo with our team."
+        path="/demo"
+        breadcrumbs={[{ name: "Book a Demo", path: "/demo" }]}
+      />
       {/* Header */}
       <nav className="border-b border-border/50">
         <div className="apple-container">

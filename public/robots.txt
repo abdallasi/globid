@@ -1,4 +1,188 @@
+# GlobID — all major search and AI crawlers are welcome.
+# Only private/transactional areas are disallowed.
+
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+# Search engines
+
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Applebot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Slurp
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+# AI / LLM crawlers
+
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: CCBot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: Bytespider
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /payment
+Disallow: /verify
+Disallow: /success
+Disallow: /admin
 
 Sitemap: https://globid.co/sitemap.xml

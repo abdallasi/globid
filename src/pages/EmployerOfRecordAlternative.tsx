@@ -16,6 +16,7 @@ const EmployerOfRecordAlternative = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Employer of Record Alternative — EOR vs Direct Hiring" />
         <meta name="twitter:description" content="Explore alternatives to EOR services for international hiring." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Employer of Record Alternative", "item": "https://globid.co/employer-of-record-alternative"}]}`}</script>
       </Helmet>
 
       {/* Navigation */}

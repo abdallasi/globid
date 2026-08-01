@@ -336,7 +336,7 @@ const PassportViewer = () => {
                 <div className="ml-0 sm:ml-10 p-4 bg-muted/50 rounded-xl border border-border">
                   <img 
                     src={passport.signature_file_url} 
-                    alt="Signature" 
+                    alt="Handwritten signature of the passport holder" 
                     className="h-12 sm:h-16 object-contain"
                   />
                 </div>

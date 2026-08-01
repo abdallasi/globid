@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Seo from "@/components/Seo";
 
 const RemoteWorkDocuments = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Remote Work Documents — What Employers Ask For"
+        description="The documents international remote workers need: identity, proof of address, tax and payment details. Learn what to prepare and how to store them securely."
+        path="/remote-work-documents"
+        type="article"
+        breadcrumbs={[{ name: "Remote Work Documents", path: "/remote-work-documents" }]}
+      />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">

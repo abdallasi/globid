@@ -15,6 +15,7 @@ const Manifesto = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="The GlobID Manifesto — Work Should Be Borderless" />
         <meta name="twitter:description" content="Work should be borderless. Employment should be effortless." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "The GlobID Manifesto", "item": "https://globid.co/manifesto"}]}`}</script>
       </Helmet>
 
       {/* Navigation */}

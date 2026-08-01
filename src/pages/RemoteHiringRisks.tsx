@@ -16,6 +16,7 @@ const RemoteHiringRisks = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Remote Hiring Risks — Mitigate International Hiring Risks" />
         <meta name="twitter:description" content="Understand and mitigate the risks of hiring internationally." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Remote Hiring Risks", "item": "https://globid.co/remote-hiring-risks"}]}`}</script>
       </Helmet>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">

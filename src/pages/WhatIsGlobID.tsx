@@ -17,6 +17,7 @@ const WhatIsGlobID = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="What is GlobID? — Global Worker Identity Platform" />
         <meta name="twitter:description" content="GlobID is a global worker identity platform that creates a single, verified profile professionals can share with any employer worldwide." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "What is GlobID?", "item": "https://globid.co/what-is-globid"}]}`}</script>
       </Helmet>
 
       {/* Navigation */}

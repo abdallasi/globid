@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Seo from "@/components/Seo";
 
 const MenaRemoteWork = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Remote Work in MENA, Africa & Canada — Opportunities Guide"
+        description="Where the remote work opportunities are across MENA, Africa and Canada, what employers ask for, and how a verified worker identity opens cross-border roles."
+        path="/mena-remote-work"
+        type="article"
+        breadcrumbs={[{ name: "MENA Remote Work", path: "/mena-remote-work" }]}
+      />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">

@@ -16,6 +16,7 @@ const DeelAlternative = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Deel Alternative — Compare Global Hiring Platforms" />
         <meta name="twitter:description" content="Compare Deel with alternative global hiring solutions." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Deel Alternative", "item": "https://globid.co/deel-alternative"}]}`}</script>
       </Helmet>
 
       {/* Navigation */}

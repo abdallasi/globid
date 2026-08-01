@@ -15,4 +15,8 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // CJS-only deps must be bundled for the build-time prerender (ESM) to import them.
+  ssr: {
+    noExternal: ["react-helmet-async", "react-router-dom", "react-router", "@supabase/supabase-js"],
+  },
 }));

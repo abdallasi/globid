@@ -16,6 +16,7 @@ const GlobalHiringCompliance = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Global Hiring Compliance — International Employment Laws" />
         <meta name="twitter:description" content="Understand global hiring compliance requirements for international hiring." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Global Hiring Compliance", "item": "https://globid.co/global-hiring-compliance"}]}`}</script>
       </Helmet>
 
       {/* Navigation */}

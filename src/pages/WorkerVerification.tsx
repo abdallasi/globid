@@ -16,6 +16,7 @@ const WorkerVerification = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Worker Verification — International Hiring Verification" />
         <meta name="twitter:description" content="Learn how worker verification works for international hiring." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Worker Verification", "item": "https://globid.co/worker-verification"}]}`}</script>
       </Helmet>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
