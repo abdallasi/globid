@@ -1,0 +1,50 @@
+# GlobID
+
+> GlobID is a global worker identity platform. It gives professionals one verified,
+> portable employment identity — a "global work passport" — so companies can hire,
+> onboard, and pay them across borders without opening a local entity.
+
+## What it is
+
+GlobID issues a single verified worker profile containing identity documents, legal
+work eligibility, and payment details. Workers verify once; every employer they
+apply to can instantly confirm who they are and what documents they hold.
+
+## Who it's for
+
+- International and remote workers in MENA, Africa, South Asia, and Canada who need
+  a credible, reusable proof of identity and work eligibility.
+- Companies hiring cross-border talent that need compliant onboarding without setting
+  up local entities or a full employer-of-record contract.
+
+## Core features
+
+- One-time worker verification, reusable with every employer
+- Secure storage of legal and employment documents
+- Shareable verified passport profile for employers
+- Compliant cross-border onboarding across 60+ countries, MENA-first
+- Automated payment details capture to reduce payout errors
+- No setup cost for employers; $99 one-time verification for individuals
+
+## Key pages
+
+- [Homepage](https://globid.co/): product overview and pricing
+- [What is GlobID](https://globid.co/what-is-globid): full product explanation
+- [Global worker identity](https://globid.co/global-worker-identity): the identity model
+- [Worker verification](https://globid.co/worker-verification): how verification works
+- [Global worker verification](https://globid.co/global-worker-verification): verification for remote hiring
+- [Global hiring compliance](https://globid.co/global-hiring-compliance): compliance guidance
+- [Employer of record alternative](https://globid.co/employer-of-record-alternative): comparison with EOR
+- [Deel alternative](https://globid.co/deel-alternative): comparison with Deel
+- [Hire international talent](https://globid.co/hire-international-talent): employer guide
+- [Hire in MENA](https://globid.co/hire-in-mena) · [Hire in Africa](https://globid.co/hire-in-africa) · [Hire in Nigeria](https://globid.co/hire-in-nigeria)
+- [MENA remote work](https://globid.co/mena-remote-work): regional opportunities
+- [Remote work documents](https://globid.co/remote-work-documents): documents workers need
+- [Identity for remote jobs](https://globid.co/identity-for-remote-jobs): worker guide
+- [Remote hiring risks](https://globid.co/remote-hiring-risks): fraud and compliance risks
+- [Manifesto](https://globid.co/manifesto): why GlobID exists
+- [Book a demo](https://globid.co/demo): for companies
+
+## Contact
+
+support@globid.co
