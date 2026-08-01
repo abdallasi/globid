@@ -16,6 +16,7 @@ const GlobalWorkerIdentity = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Global Worker Identity — Verified Professional Profiles" />
         <meta name="twitter:description" content="A global worker identity is a verified professional profile that works across borders." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Global Worker Identity", "item": "https://globid.co/global-worker-identity"}]}`}</script>
       </Helmet>
 
       {/* Navigation */}

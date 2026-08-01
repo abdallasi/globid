@@ -16,6 +16,7 @@ const HireInNigeria = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Hire in Nigeria — Africa's Largest Talent Market" />
         <meta name="twitter:description" content="Access Africa's largest talent market with confidence." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Hire in Nigeria", "item": "https://globid.co/hire-in-nigeria"}]}`}</script>
       </Helmet>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">

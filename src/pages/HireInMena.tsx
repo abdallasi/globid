@@ -16,6 +16,7 @@ const HireInMena = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Hire in MENA — Middle East & North Africa Talent" />
         <meta name="twitter:description" content="Access world-class talent in the Middle East and North Africa." />
+        <script type="application/ld+json">{`{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://globid.co/"}, {"@type": "ListItem", "position": 2, "name": "Hire in MENA", "item": "https://globid.co/hire-in-mena"}]}`}</script>
       </Helmet>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
