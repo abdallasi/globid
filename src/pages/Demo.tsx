@@ -158,6 +158,12 @@ const Demo = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Book a GlobID Demo — Compliant Global Hiring for Companies"
+        description="See how GlobID lets your company hire, verify and pay international talent in 60+ countries without opening a local entity. Book a live demo with our team."
+        path="/demo"
+        breadcrumbs={[{ name: "Book a Demo", path: "/demo" }]}
+      />
       {/* Header */}
       <nav className="border-b border-border/50">
         <div className="apple-container">
