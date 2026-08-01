@@ -22,6 +22,7 @@ export function render(url: string) {
 
   const head = helmet
     ? [
+        helmet.priority ? helmet.priority.toString() : "",
         helmet.title.toString(),
         helmet.meta.toString(),
         helmet.link.toString(),
